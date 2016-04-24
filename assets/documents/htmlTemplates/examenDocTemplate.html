@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Examin de document - RCOMAROC</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <style>
+        body {
+            background: white;
+            line-height: .6cm;
+            font-family: 'Open Sans', sans-serif !important;
+            font-weight: normal;
+            font-size: 10px;
+        }
+
+        page[size="A4"] {
+            position: relative;
+            background: white;
+            width: 210mm;
+            height: 211.7mm;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border: solid 1px transparent;
+            width: 80%;
+        }
+
+        .main-table .desc-zone p{
+            line-height: 15px;
+        }
+
+        .page-content {
+            height: 100%;
+            width: 100%;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            border-top: solid 1px #8C8C8C;
+            text-align: right;
+            font-size: 12px;
+            width: 100%;
+            text-align: center;
+            color: #A4A4A4;
+        }
+
+        #logo {
+            text-align: center;
+            border-bottom: solid 1px #8C8C8C;
+            width: 100%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #company {
+            text-align: center;
+            color: #A4A4A4;
+        }
+
+        #company h2 {
+            font-weight: normal;
+        }
+
+        .col-md-4 {
+            width: 33.33333333%;
+            float: left;
+        }
+
+        .col-md-5 {
+            width: 41.6666667%;
+            float: left;
+        }
+
+        .col-md-6 {
+            width: 50%;
+            float: left;
+        }
+
+        .col-md-8 {
+            width: 66.66666666%;
+            float: left;
+        }
+
+        .col-md-10 {
+            width: 83.33333333%;
+            float: left;
+        }
+
+        .col-md-12 {
+            width: 100%;
+            float: left;
+        }
+
+        .text-left {
+            text-align: left !important;
+        }
+
+        .text-right {
+            text-align: right !important;
+        }
+
+        .bs-example > .alert:last-child,
+        .bs-example > .form-control:last-child,
+        .bs-example > .jumbotron:last-child,
+        .bs-example > .list-group:last-child,
+        .bs-example > .navbar:last-child,
+        .bs-example > .panel:last-child,
+        .bs-example > .progress:last-child,
+        .bs-example > .table-responsive:last-child > .table,
+        .bs-example > .table:last-child,
+        .bs-example > .well:last-child,
+        .bs-example > blockquote:last-child,
+        .bs-example > ol:last-child,
+        .bs-example > p:last-child,
+        .bs-example > ul:last-child {
+            margin-bottom: 0;
+        }
+
+        table {
+            background-color: transparent;
+            width: 100%;
+            border-spacing: 0;
+            border-collapse: collapse;
+            margin-bottom: 10px;;
+        }
+
+        .table-striped > tbody > tr:nth-of-type(odd) {
+            background-color: #f9f9f9;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        td {
+            border: solid 1px #ddd;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        label {
+            width: 100%;
+            float: left;
+        }
+
+        label.total {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: solid 1px #ddd;
+        }
+
+        .text-align-center {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+<page size="A4">
+    <h1 class="text-align-center">Examen de documents</h1>
+    <table>
+        <table>
+            <tr>
+                <td colspan="3">
+                    Affaire: <strong>{{projectName}}</strong><br>
+                    Adresse: <strong>{{projectAddress}}, {{city}}</strong><br>
+                    Dossier: <strong>{{projectRef}}</strong>
+                </td>
+                <td colspan="3">
+                    Missions confi&eacute;es :{{#each missions}}
+                    <strong>{{this.name}}</strong>, {{/each}}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Client: <strong>{{customer}}</strong>
+                </td>
+                <td colspan="2">
+                    R&eacute;f&eacute;rence: <strong>{{projectRef}}/{{mailNum}}</strong>
+                </td>
+                <td colspan="2">
+                    Pilote: <strong>{{projectLeader}}</strong>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    Intervenant: <strong>{{contributor.name}}</strong>
+                </td>
+                <td colspan="3">
+                    Copie aux participants: {{#each participants}}
+                    <strong>{{this.company}}</strong>, {{/each}}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    D&eacute;signation - Identification des documents examin&eacute;s
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" rowspan="2">
+                    {{#each examDocs}}
+                    <li style="list-style:none">
+                        <strong>{{inc @index}}- {{this.label}}</strong>
+                    </li>
+                    {{/each}}
+                </td>
+            </tr>
+        </table>
+    </table>
+
+    <table class="main-table">
+        <tbody>
+        <tr>
+            <td colspan="4" valign="top" width="629">
+                <p align="center">
+                    Pour mission(s) concern&eacute;e(s), avis sur les dispositions techniques des documents examin&eacute;s
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="509">
+                <p align="center">
+                    (F : Favorable, D : D&eacute;favorable, S: Suspendu)
+                </p>
+            </td>
+            <td valign="top" width="36">
+                <p align="center">
+                    F
+                </p>
+            </td>
+            <td valign="top" width="36">
+                <p align="center">
+                    D
+                </p>
+            </td>
+            <td valign="top" width="36">
+                <p align="center">
+                    S
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" valign="top" width="629">
+            <p align="center">L’examen de ces plans nous a fait appel les remarques suivantes :</p>
+            </td>
+        </tr>
+        {{#each examDocs}}
+        <tr>
+            <td valign="top" width="509">
+                <label width="100%">
+                    {{inc @index}}- {{label}}:
+                </label>
+                <div class="desc-zone">
+                    <ul style="list-style: none">
+                        <li style="float:left">
+                            {{{description}}}
+                        </li>
+                    </ul>
+                </div>
+            </td>
+            <td valign="top" width="36">
+            </td>
+            <td valign="top" width="36">
+            </td>
+            <td valign="top" width="36">
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+    <p>
+        Nous vous remercions de bien vouloir nous indiquer les suites qui seront donn&eacute;es aux avis suspendus et
+        d&eacute;favorables.
+    </p>
+
+    <p>
+        Les avis rest&eacute;s sans suites seront repris comme « Avis d&eacute;favorables » dans notre Rapport Final de Contr&ocirc;le
+        Technique.
+    </p>
+    <table border="0">
+        <tbody>
+        <tr>
+            <td valign="top" width="36" style="border: 0px;">
+                <strong><em> Intervenant : {{contributor.name}}</em></strong>
+            </td>
+            <td valign="top" width="36" style="border: 0px;">
+                <strong><em> Pilote : {{projectLeader}}</em></strong>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</page>
+<img style="display: none" src="http://www.rcomaroc.com/wp-content/uploads/2014/12/LOGO12.jpg">
+</body>
+
+</html>

@@ -1,0 +1,186 @@
+<tabset>
+	<tab>
+		<tab-heading> <i class="fa fa-cubes"></i> Mes projets </tab-heading>
+		<div class="box border no-top">
+			<div class="box-body overflow-visible">
+				<a href="#/addproject" class="btn btn btn-primary">
+					<i class="fa fa-plus"></i> Ajouter
+				</a>
+				<button ng-click="refreshData()" class="btn btn btn-default">
+					<i class="fa fa-refresh"></i> Recharger les données
+				</button>
+				<table st-table="displayedCollection" st-safe-src="projects" class="table table-striped">
+					<thead>
+						<tr>
+							<th colspan="10">
+								<div class="input-group">
+									<span class="input-group-addon" id="basic-addon1"><i class="fa fa-search"></i></span>
+									<input st-search="" st-delay="100" class="form-control" placeholder="Recherche globale" type="text" />
+								</div>
+							</th>
+						</tr>
+						<tr>
+							<th></th>
+							<th st-sort="ref">Référence</th>
+							<th st-sort="name">Nom de projet</th>
+							<th st-sort="company">Client</th>
+							<th st-sort="budget">Budget</th>
+							<th st-sort="mission">Missons</th>
+                            <th st-sort="mission">Avancement</th>
+							<th st-sort="status">Statut</th>
+							<th>Chef de projet</th>
+							<th st-sort="starts" st-sort-default="reverse">Date du projet</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="project in displayedCollection">
+							<td cs-select="project"></td>
+							<td>{{ project.ref }}</td>
+							<td><a href="#/project/{{project.id}}"  tooltip="{{project.name}}">{{ project.name | truncate: 33: '...' }}</a></td>
+							<td>{{ project.customer.company }}</td>
+							<td>{{calculateTotalBudget(project.subProjects)| currency:""}} DH</td>
+                            <td>
+                                <button class="show-btn btn btn-default" ng-click="missionDetails(project, $index)" tooltip="Missions associées"><i class="fa" ng-class="{'fa-wrench': !isShowingMissions($index), 'fa-circle-o-notch fa-spin': isShowingMissions($index)}"></i>
+                                </button >
+                            </td>
+							<td>
+                                <span sparkline="getDuration(project)" type="pie" slice-colors="[#4CAF50,#eee]" width="2em" height="2em" model="{{project}}"></span>
+							</td>
+							<td>
+								<span ng-if="project.status =='new'" class="label label-info">{{project.status}}</span>
+								<span ng-if="project.status =='Waiting for signing'" class="label label-danger">{{project.status}}</span>
+								<span ng-if="project.status =='Contract signed'" class="label label-success">{{project.status}}</span>
+								<span ng-if="project.status =='Document examination'" class="label label-warning">{{project.status}}</span>
+								<span ng-if="project.status =='Site visits'" class="label label-primary">{{project.status}}</span>
+							</td>
+							<td>{{ project.projectLeader.name }}</td>
+							<td>
+								{{project.starts | date:'dd/MM/yyyy'}}
+							</td>
+							<th class="btn-zone-bg">
+								<button class="show-btn btn btn-success" tooltip="Clore le projet">
+									<i class="fa fa-check"></i>
+								</button>
+								<a href="#/project/{{project.id}}" class="show-btn btn btn-default" tooltip="Détails">
+									<i class="fa fa-eye"></i>
+								</a>
+								<button ng-click="openDeleteDialog(project)" class="show-btn btn btn-danger" tooltip="Supprimer">
+									<i class="fa fa-trash"></i>
+								</button>
+								<div class="btn-group" dropdown>
+									<button type="button" class="show-btn btn btn-primary dropdown-toggle" ng-disabled="disabled">
+										<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu sm" role="menu">
+										<li><a href="#/project/{{project.id}}/tasks"><i class="fa fa-tasks"></i> Tâches</a>
+										</li>
+                                        <li><a href="#/project/{{project.id}}/messages"><i class="fa fa-tasks"></i> Messages</a>
+                                        </li>
+										<li><a href="#/project/{{project.id}}/missions"><i class="fa fa-wrench"></i> Missions</a>
+										</li>
+										<li><a href="#/project/{{project.id}}/docExam"><i class="fa fa-file-text"></i> Examination de document</a>
+										</li>
+										<li><a href="#/project/{{project.id}}/descriptionFile"><i class="fa fa-clipboard"></i> Fiche descriptive</a>
+										</li>
+										<li><a href="#/project/{{project.id}}/fieldVisit"><i class="fa fa-map-marker"></i> Visites de chantier</a>
+										</li>
+									</ul>
+								</div>
+							</th>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="10" class="text-center">
+								<div st-pagination="" st-items-by-page="10" st-displayed-pages="10"></div>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+				<div ng-hide="projects" class="no-project">
+					<h4>Aucun élément à afficher</h4>
+				</div>
+			</div>
+		</div>
+	</tab>
+	<tab>
+		<tab-heading> <i class="fa fa-tasks"></i> Mes taches</tab-heading>
+		<div class="box border no-top">
+			<div class="box-body">
+				work in progress...
+			</div>
+		</div>
+	</tab>
+	<tab>
+		<tab-heading> <i class="fa fa-calendar-o"></i> Mon calendrier</tab-heading>
+		<div class="box border no-top">
+			<div class="box-body">
+				work in progress...
+			</div>
+		</div>
+	</tab>
+</tabset>
+
+
+<script type="text/ng-template" id="delProjectModal">
+	<div class="ngdialog-message">
+		<h2>Suppression de projet</h2>
+		<div>Voulez-vous vraiment supprimer ce projet</div>
+	</div>
+	<div class="ngdialog-buttons mt">
+		<button busy="Suppression.." ng-click="deleteProject()" class="btn btn-primary">Confirmer</button>
+		<button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+	</div>
+</script>
+
+
+<script type="text/ng-template" id="uploadContractModal">
+	<div class="ngdialog-message">
+		<h2>Uploader un contrat signé <sup class="small text-danger">* en format pdf<sup></h2>
+		<div>
+			<div class="drop" ng-file-drop="" ng-file-select="" ng-model="$parent.files" ng-model-rejected="rejFiles" drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box" ng-multiple="true" allow-dir="false" ng-accept="'*.pdf'">
+				Cliquez ou glisser-déposer le fichier
+			</div>
+			<div ng-show="files.length > 0">
+				<div class="file-container dialog-upload-container" ng-repeat="f in files">
+					<div class="thumbnail file col-md-2">
+						<i class="fa fa-file-pdf-o fa-3x"></i>
+					</div>
+					<span class="title">{{f.name}} - {{f.size}}b</span>
+					<progressbar ng-show="progressPercentage >= 0" animate="true" value="progressPercentage" type="success">{{progressPercentage}}%</progressbar>
+				</div>
+			</div>
+		</div>
+</script>
+
+<script type="text/ng-template" id="missionDetailModal">
+	<div class="ngdialog-message">
+		<h2>{{projectSelected.name}}<br/><small>Ref: {{projectSelected.ref}}</small></h2>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Missions</th>
+					<th>Budget</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="subproject in subProjects ">
+					<td>
+						<span class="label label-default mission-label" ng-repeat="mission in subproject.missions">{{mission.name}}</span>
+					</td>
+					<td>{{ subproject.budget | currency:""}} DH</td>
+				</tr>
+				<tr>
+					<td style="text-align:right"><b>Total:</b>
+					</td>
+					<td>{{calculateTotalBudget(subProjects)| currency:""}} DH</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+	<div class="ngdialog-buttons mt">
+		<button ng-click="closeModal()" class="btn btn-default">Ok</button>
+	</div>
+</script>

@@ -1,0 +1,57 @@
+<div class="site-wrapper">
+	<div class="site-wrapper-inner">
+
+		<div class="cover-container">
+			<div class="masthead clearfix">
+				<div class="inner">
+					<h3 class="masthead-brand"><img width="160px" src="images/logo.png"></h3>
+					<!-- nav>
+						<ul class="nav masthead-nav">
+							<li><a href="/">Accueil</a>
+							</li>
+							<li><a href="#">A propos</a>
+							</li>
+							<li><a href="#">Contact</a>
+							</li>
+						</ul>
+					</nav -->
+				</div>
+			</div>
+
+			<div id="login" class="inner cover signup">
+				<% if(flash && flash.err){ %>
+					<div class="alert alert-danger" role="alert">
+						<% Object.keys(flash.err).forEach(function(error){ %>
+							<strong><%- flash.err[error].type %></strong>
+							<%- flash.err[error].message %>
+								<%})%>
+					</div>
+					<% } %>
+						<div class="form-wrap">
+							<h1>Connectez vous avec votre email</h1>
+							<form role="form" action="/session/create" method="POST" role="form" id="login-form">
+								<div class="form-group">
+									<label for="email" class="sr-only">Email</label>
+									<input type="email" class="form-control" name="email" placeholder="Enter email">
+								</div>
+								<div class="form-group">
+									<label for="key" class="sr-only">Password</label>
+									<input type="password" class="form-control" name="password" placeholder="Password">
+								</div>
+								<input type="submit" id="btn-login" class="btn btn-success btn-lg btn-block" value="Connexion">
+							</form>
+							<a href="javascript:;" class="forget" data-toggle="modal" data-target=".forget-modal">Mot de passe oublié?</a>
+							<hr>
+						</div>
+			</div>
+
+			<div class="mastfoot">
+				<div class="inner">
+					<p>Powred by <a href="http://www.rcomaroc.com">RISK Control</a>
+					</p>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>

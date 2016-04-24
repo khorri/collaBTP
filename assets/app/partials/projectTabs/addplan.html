@@ -1,0 +1,215 @@
+<div class="col-md-12 add-project-container">
+    <form id="addPlanForm" name="addPlanForm" role="form">
+        <div class="col-md-12 ">
+            <h2>Details du plan</h2>
+
+            <div sticky offset="100" class="col-md-12 form-btn-container">
+                <button ng-click="createPlan()" ng-disabled="addPlanForm.$invalid" class="btn btn-primary">
+                    <i class="fa" ng-class="{'fa-plus': !isCreating, 'fa-circle-o-notch fa-spin': isCreating}"></i>
+                    Créer le plan
+                </button>
+                <a href="#/project/{{project.id}}/plans" class="btn btn-default">Annuler</a>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-12">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Nom du plan <sup class="text-danger">*</sup>
+                            </label>
+                            <input type="text" ng-model="plan.name" class="form-control"
+                                   placeholder="Insérez un nom de plan" ng-maxlength=200 required>
+                        </div>
+                        <div class="form-group">
+                            <label>Missions </label>
+                            <ui-select theme="select2" ng-model="plan.mission">
+                                <ui-select-match placeholder="">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="mission in missions | filter: $select.search">
+                                    {{mission.name}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="form-group">
+                            <label>Niveau
+                            </label>
+                            <input class="form-control" ng-model="plan.level" placeholder="Insérez le niveau"
+                                   ng-maxlength=200>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Collaborateur <sup class="text-danger">*</sup>
+                            </label>
+                            <ui-select class="no-validation" theme="select2" ng-model="plan.editor" required>
+                                <ui-select-match placeholder="">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="user in contributors | filter: $select.search">
+                                    <span ng-bind-html="user.name"></span>
+                                </ui-select-choices>
+                            </ui-select>
+
+                        </div>
+                        <div class="form-group">
+                            <label>Date de debut</label>
+
+                            <div class="dropdown">
+                                <a class="dropdown-toggle" id="dropdown2" role="button" data-target="#" href="#">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control project-date" data-ng-model="planStarts"
+                                               readonly><span class="input-group-addon"><i
+                                            class="glyphicon glyphicon-calendar"></i></span>
+                                    </div>
+                                </a>
+                                <ul class="dropdown-menu date-picker" role="menu" aria-labelledby="dLabel">
+                                    <datetimepicker data-ng-model="plan.starts"
+                                                    data-datetimepicker-config="{ minView: 'day' }"
+                                                    on-set-time="startsTimeChosen()"/>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Date de fin</label>
+
+                            <div class="dropdown">
+                                <a class="dropdown-toggle" id="dropdown2" role="button" data-target="#" href="#">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control project-date" data-ng-model="planEnds"
+                                               readonly><span class="input-group-addon"><i
+                                            class="glyphicon glyphicon-calendar"></i></span>
+                                    </div>
+                                </a>
+                                <ul class="dropdown-menu date-picker" role="menu" aria-labelledby="dLabel">
+                                    <datetimepicker data-ng-model="plan.ends" data-datetimepicker-config="{ minView: 'day' }"
+                                                    on-set-time="endsTimeChosen()"/>
+                                </ul>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="col-md-6 col-xs-12">
+
+                    <div class="panel panel-default panel-doc">
+                        <div class="panel-heading"><label>Les documents nécessaires:</label></div>
+                        <div class="panel-body">
+                            <div class="col-md-8">
+
+                                <div class="input-group ">
+
+                                    <input ng-enter="addDocument();" ng-esc="" type="text" class="form-control "
+                                           ng-model="newDocument.name" placeholder="Ajouter un nouveau document">
+
+                                </div>
+                            </div>
+                            <div class="col-md-2 ">
+                                <div class="btn-toolbar ">
+
+                                    <button class="btn-show btn btn-default" ng-click="addDocument();" type="button"><i
+                                            class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <table st-table="displayedDocumentsCollection" st-safe-src="documents"
+                               class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" class="styled" ng-model="selectedAll" ng-click="checkAll()">
+                                </th>
+                                <th>#</th>
+                                <th>Document</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="d in documents track by $index">
+                                <td>
+                                    <input type="checkbox" class="styled" ng-model="d.selected">
+                                </td>
+                                <td>{{$index+1}}</td>
+                                <td  ng-hide="d.isUploaded">{{d.name | truncate: 35: '...' }}</td>
+                                <td ng-show="d.isUploaded"><a ng-click="viewDocument(d);">{{d.name | truncate: 35: '...' }}</a></td>
+                                <td class="btn-zone-sm">
+                                    <button type="button" ng-click="openUploadModal(d);" class="show-btn btn btn-success btn-xs">
+                                        <i class="fa fa-cloud-upload" tooltip="Télécharger le document"></i>
+                                    </button>
+                                    <button type="button" class="show-btn btn btn-danger btn-xs"
+                                            ng-click="openDeleteDocModal(d)"
+                                            tooltip="Supprimer">
+                                        <i class="fa fa-trash "></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot></tfoot>
+
+                        </table>
+                        <div ng-hide="documents && documents.length>0" class="no-project">
+                            <h4>Aucun élément à afficher</h4>
+                        </div>
+
+                        <div class="panel-footer">
+                            <div class="btn-group pull-right">
+                                <button type="button" class="btn btn-primary">
+                                    <i class="fa fa-pencil"></i>Envoyer
+                                </button>
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                                        aria-haspopup="false" aria-expanded="true">
+                                    <span class="caret"></span>
+
+                                </button>
+                                <ul class="dropdown-menu sm" role="menu">
+                                    <li><a href="#" ng-click="checkAll()">Séléctionner tout</a></li>
+                                    <li><a href="#" ng-click="deleteAllSelected();">Supprimer tout</a></li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+</div>
+<script type="text/ng-template " id="uploadDocDialog ">
+    <div class="ngdialog-message ">
+
+
+        <div>
+            <div class="drop " ng-file-drop=" " ng-file-select=" " ng-model="$parent.files "
+                 ng-model-rejected="rejFiles "
+                 drag-over-class="{accept: 'dragover', reject: 'dragover-err', delay:100} " class="drop-box "
+                 ng-multiple="true " allow-dir="false ">
+                Cliquer ou glisser-déposer le fichier
+            </div>
+            <div ng-show="files.length> 0">
+                <div class="file-container dialog-upload-container" ng-repeat="f in files">
+                    <div class="thumbnail file col-md-2">
+                        <i class="fa fa-file-pdf-o fa-3x"></i>
+                    </div>
+                    <span class="title">{{f.name}} - {{f.size|FileSize}}</span>
+                    <progressbar ng-show="progressPercentage >= 0" animate="true" value="progressPercentage"
+                                 type="success">{{progressPercentage}}%
+                    </progressbar>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="DeleteDocModal">
+    <div class="ngdialog-message">
+        <h2>Suppression d'une examination</h2>
+
+        <p>Voulez-vous vraiment supprimer cet element ?</p>
+    </div>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="deleteDocument($parent.currentDocument);closeModal();" class="btn btn-primary">Confirmer
+        </button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>

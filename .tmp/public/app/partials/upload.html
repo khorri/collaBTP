@@ -1,0 +1,16 @@
+<div class="drop" ng-file-drop="" ng-file-select="" ng-model="files" ng-model-rejected="rejFiles" drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box" ng-multiple="true" allow-dir="true" ng-accept="'*.jpg,*.png,*.pdf,*.doc,*.docx,*.sql'">
+	Cliquez ou glisser-déposer le fichier
+</div>
+<div ng-show="files.length > 0">
+	<div class="file-container col-md-3" ng-repeat="f in files">
+		<div class="gallery-box">
+			<span class="title">{{f.name}}</span>
+			<div class="thumbnail file">
+				<i class="fa fa-file fa-5x"></i>
+			</div>
+			<progressbar ng-show="progressPercentage >= 0" animate="true" value="progressPercentage" type="success"><b>{{progressPercentage}}%</progressbar>
+			<button class="button" ng-click="f.upload.abort();f.upload.aborted=true" ng-show="f.upload != null && f.progress < 100 && !f.upload.aborted">Abort</button>
+				size: {{f.size}}B - type: {{f.type}}
+		</div>
+	</div>
+</div>

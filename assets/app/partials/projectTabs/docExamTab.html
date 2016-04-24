@@ -1,0 +1,220 @@
+<div class="box border no-top col-md-12">
+    <div class="box-body col-md-12">
+        <h1>Examination de documents</h1>
+
+        <div class="col-md-12">
+            <div class="form-group col-md-4">
+                <label class="pre-label">Référence du projet :</label>
+                <label>{{project.ref}}</label>
+            </div>
+            <div class="form-group col-md-8">
+                <label class="pre-label">Nom du projet :</label>
+                <label>{{project.name}}</label>
+            </div>
+        </div>
+        <button ng-click="openAddDocExaminationDialog()" class="btn btn btn-primary">
+            <i class="fa fa-plus"></i> Ajouter
+        </button>
+        <div class="btn-group" dropdown>
+            <button class="btn btn btn-default dropdown-toggle"
+                    ng-disabled="!elementSelected || isGeneretingDocExam || docExaminations.length < 1">
+                <i class="fa"
+                   ng-class="{'fa-print': !isGeneretingDocExam, 'fa-circle-o-notch fa-spin':isGeneretingDocExam}"></i>
+                Imprimer <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu sm" role="menu">
+                <li><a ng-click="header = true; createDocument();" dropdown-toggle>Avec entête</a></li>
+                <li><a ng-click="header = false; createDocument();" dropdown-toggle>Sans entête</a></li>
+            </ul>
+        </div>
+        <button class="btn btn btn-default" ng-click="openSendDocExaminationModal()"
+                ng-disabled="!elementSelected || isSendingDocExam || docExaminations.length < 1">
+            <i class="fa"
+               ng-class="{'fa-paper-plane': !isSendingDocExam, 'fa-circle-o-notch fa-spin':isSendingDocExam}"></i>
+            Envoyer
+        </button>
+        <table st-table="displayedCollection" st-safe-src="docExaminations" class="table table-striped">
+            <thead>
+            <tr>
+                <th></th>
+                <th style="min-width:105px" st-sort="mailNum" st-sort-default="default">N° Courrier</th>
+                <th>Collaborateur</th>
+                <th class="head-md">Libellé</th>
+                <th>Description</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="docExam in displayedCollection track by $index">
+                <td cs-select-docexam="docExam"></td>
+                <td>{{ docExam.mailNum }}</td>
+                <td>{{ docExam.contributor.name }}</td>
+                <td><span class="pointer" popover="{{ docExam.label }}" popover-trigger="click" popover-popup-delay="0">{{ docExam.label | truncate: 35: '...' }}</span>
+                </td>
+                <td class="text"><span ta-bind ng-model="docExam.description"></span>
+                </td>
+                <td class="btn-zone-sm">
+                    <button class="show-btn btn btn-primary" ng-click="openUpdateDocExaminationDialog(docExam)"
+                            tooltip="Modifier">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                    <button class="show-btn btn btn-danger" ng-click="openDeleteDocExaminationModal(docExam.id)"
+                            tooltip="Supprimer">
+                        <i class="fa fa-trash "></i>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div ng-hide="displayedCollection" class="no-project">
+            <h4>Aucun élément à afficher</h4>
+        </div>
+    </div>
+</div>
+
+<!--START DOCEXAMINATION MODALS -->
+
+<script type="text/ng-template " id="addDocExaminationModal ">
+    <form class="col-md-12" name="addDocExamForm">
+        <h2>Nouvelle examination de document</h2>
+
+        <div class="form-group col-md-6">
+            <label class="pre-label">N° de courrier <sup class="text-danger">*</sup>
+            </label>
+            <input type="number" class="form-control" ng-model="newDocExam.mailNum" name="newDocExam.mailNum" required>
+        </div>
+        <div class="form-group col-md-6">
+            <label class="pre-label">Collaborateur <sup class="text-danger">*</sup>
+            </label>
+            <ui-select class="no-validation" theme="select2" ng-model="newDocExam.contributor" required>
+                <ui-select-match placeholder="">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="user in contributors | filter: $select.search">
+                    <div ng-bind-html="user.name"></div>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="pre-label">Label <sup class="text-danger">*</sup>
+            </label>
+            <input type="text" class="form-control" ng-model="newDocExam.label" name="newDocExam.label" required>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="pre-label">Description <sup class="text-danger">*</sup>
+            </label>
+            <text-angular ng-model="newDocExam.description"
+                          ta-toolbar="[['h1','h2','h3','h4','p','pre','quote'],['bold','italics','underline','strikeThrough'],['ul','ol','justifyLeft','justifyCenter','justifyRight','indent','outdent'],['undo','redo']]"
+                          required></text-angular>
+        </div>
+
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="createDocExamination()" class="btn btn-primary" ng-disabled="addDocExamForm.$invalid"><i
+                class="fa fa-plus"></i> Ajouter l'examination
+        </button>
+    </div>
+</script>
+<!--modifier exam doc modal-->
+<script type="text/ng-template " id="updateDocExaminationModal">
+    <h2>Modifier une examination de document</h2>
+    <form class="col-md-12 ">
+        <div class="form-group col-md-6">
+            <label>
+                Référence du projet:
+            </label>
+            <label>{{project.ref}}</label>
+        </div>
+        <div class="form-group col-md-6">
+            <label>Nom du projet:
+            </label>
+            <label>{{project.name}}</label>
+        </div>
+        <div class="form-group col-md-6">
+            <label class="pre-label">N° de courrier</label>
+            <input type="number" class="form-control" ng-model="currentDocExam.mailNum" name="currentDocExam.mailNum"
+                   required>
+        </div>
+        <div class="form-group col-md-6">
+            <label class="pre-label">Collaborateur</label>
+            <ui-select class="no-validation" theme="select2" ng-model="currentDocExam.contributor" required>
+                <ui-select-match placeholder="">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="user in contributors | filter: $select.search">
+                    <div ng-bind-html="user.name"></div>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="pre-label">Label</label>
+            <input type="text" class="form-control" ng-model="currentDocExam.label" name="currentDocExam.label"
+                   required>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="pre-label">Description</label>
+            <text-angular ng-model="currentDocExam.description"
+                          ta-toolbar="[['h1','h2','h3','h4','p','pre','quote'],['bold','italics','underline','strikeThrough'],['ul','ol','justifyLeft','justifyCenter','justifyRight','indent','outdent'],['undo','redo']]"
+                          required></text-angular>
+        </div>
+
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal(); updateDocExamination()" class="btn btn-primary "><i class="fa fa-edit"></i> Modifier le document</button>
+    </div>
+</script>
+
+<script type="text/ng-template " id="sendDocExaminationModal">
+    <h2>Envoyer l'examination de document</h2>
+    <form class="col-md-12" name="sendDocexam">
+        <div class="form-group col-md-6">
+            <label>
+                Référence du projet:
+            </label>
+            <label>{{project.ref}}</label>
+        </div>
+        <div class="form-group col-md-6">
+            <label>
+                Nom du projet:
+            </label>
+            <label>{{project.name}}</label>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="pre-label">À
+            </label>
+            <select multiple ui-select2 ng-model="$parent.selectedParticipants" required>
+                <option ng-repeat="participant in personTosend" value="{{participant.email}}">
+                    {{participant.company}} <{{participant.email}}>
+                </option>
+            </select>
+        </div>
+        <div class="form-group col-md-12">
+            <label>Sujet</label>
+            <input type="text" class="form-control" ng-model="$parent.emailSubject">
+        </div>
+        <div class="form-group col-md-12">
+            <label class="pre-label">Contenu de l'email
+            </label>
+            <text-angular ng-model="$parent.emailBody"
+                          ta-toolbar="[['h1','h2','h3','h4','p','pre','quote'],['bold','italics','underline','strikeThrough'],['ul','ol','justifyLeft','justifyCenter','justifyRight','indent','outdent'],['undo','redo']]"
+                    ></text-angular>
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="sendDocToParticipants()" class="btn btn-primary" ng-disabled="sendDocexam.$invalid"><i
+                class="fa fa-paper-plane"></i> Envoyer le
+            document
+        </button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="DeleteDocExaminationModal">
+    <div class="ngdialog-message">
+        <h2>Suppression d'une examination</h2>
+
+        <p>Voulez-vous vraiment supprimer cet element ?</p>
+    </div>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal();deleteDocExamination($parent.currentdocExam)" class="btn btn-primary">Confirmer
+        </button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+
+<!--END DOCEXAMINATION MODALS -->

@@ -1,0 +1,175 @@
+<div ng-controller="coreCtrl">
+	<nav class="navbar navbar-default" role="navigation">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand"><img src="images/logo.png">
+			</a>
+		</div>
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li ng-class="{active: page == 'home'}"><a href="#/home"><i class="fa fa-dashboard"></i> Dashboard</a>
+				</li>
+				<li ng-class="{active: page == 'Administration'}"><a href="#/admin"><i class="fa fa-cog"></i> Administration</a>
+                </li>
+                <li ng-class="{active: page == 'stats'}"><a href="#/stats"><i class="fa fa-pie-chart"></i> Statistiques</a>
+                </li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li class="dropdown icon-btn"><a href="#" class="dropdown-toggle"><span
+																						class="fa fa-bell"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li class="dropdown-title">
+							<span><i class="fa fa-bell"></i> 0 notifications</span>
+						</li>
+						<li>
+							<a href="#">
+								<span class="label label-success"><i class="fa fa-user"></i></span>
+								<span class="body">
+									<span class="message">5 users online. </span>
+								<span class="time">
+										<i class="fa fa-clock-o"></i>
+										<span>Just now</span>
+								</span>
+								</span>
+							</a>
+						</li>
+						<li class="footer">
+							<a href="#">See all notifications <i class="fa fa-arrow-circle-right"></i></a>
+						</li>
+					</ul>
+				</li>
+				<!--	<li class="dropdown icon-btn"><a href="#" class="dropdown-toggle"><span class="fa fa-envelope"><message-badge></message-badge></span>
+					</a>
+					<ul class="dropdown-menu inbox">
+						<li class="dropdown-title">
+							<span><i class="fa fa-envelope-o"></i> {{newMessages.length}} new Messages</span>
+							<span class="compose pull-right tip-right" title="" data-original-title="Compose message"><i class="fa fa-pencil-square-o"></i></span>
+						</li>
+						<li ng-click="openMsg()" ng-repeat="msg in lastmessages">
+							<a>
+								<img class="img-circle" src="images/no-img.png" alt="User Pic">
+								<span class="body">
+									<span class="from"><strong>{{msg.from.name}}: </strong></span>
+								<span>{{msg.content}}</span>
+								<span class="time">
+										<i class="fa fa-clock-o"></i>
+										<span am-time-ago="msg.createdAt"></span>
+								</span>
+				</span>
+
+				</a>
+				</li>
+				<li class="footer">
+					<a href="#">See all messages <i class="fa fa-arrow-circle-right"></i></a>
+				</li>
+			</ul>
+			</li>
+			<li class="icon-btn pointer"><a href="" ng-click="usersNavClicked()" class="dropdown-toggle"><span
+																													class="fa fa-users" ng-class="{white: usersHidden == false}"></span>
+					</a>
+			</li> -->
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle">
+						<%=session.user.name %> <b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="#/myprofil"><span class="fa fa-user"></span> Profile</a>
+						</li>
+						<li><a href="#"><span class="fa fa-cog"></span> Settings</a>
+						</li>
+						<li class="divider"></li>
+						<li><a href="/session/destroy"><span class="fa fa-logout"></span> Logout</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<!-- /.navbar-collapse -->
+	</nav>
+
+	<div class="container-fluid principal">
+		<div class="row breadcrumb-container ng-cloak">
+			<div ncy-breadcrumb></div>
+		</div>
+
+		<spinner class="spinner"></spinner>
+
+		<!-- mainview -->
+		<div class="col-md-12 main-view-container">
+			<div ui-view ng-if='!isRouteLoading' class="main-view"></div>
+		</div>
+
+		<!-- friendlist 
+		<div class="friend-list col-md-2 ng-cloak" ng-show="!usersHidden">
+			<friend-list></friend-list>
+		</div>
+-->
+	</div>
+	<toaster-container></toaster-container>
+	<!-- chatbox -->
+	<div ng-show="showChatBox" class="chat-window row ng-cloak" style="margin-left:10px;">
+		<div class="col-xs-12 col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading top-bar">
+					<div class="col-md-10 col-xs-10">
+						<h3 class="panel-title"><span class="fa fa-comment"></span> {{chatUser.name | truncate:20}}</h3>
+					</div>
+					<div class="col-md-2 col-xs-2" style="text-align: right;">
+						<a class="close-pointer" ng-click="closeChatBoxClicked()"><span class="fa fa-remove icon_close"></span></a>
+					</div>
+				</div>
+				<div class="panel-body msg_container_base">
+					<div ng-repeat="msg in discussion">
+						<div ng-show="msg.type == 'sent'" class="row msg_container base_sent">
+							<div class="col-md-10 col-xs-10">
+								<div class="messages msg_sent">
+									<p>{{msg.msg}}</p>
+									<time datetime="2009-11-13T20:00">{{msg.user}} • 51 min</time>
+								</div>
+							</div>
+							<div class="col-md-2 col-xs-2 avatar">
+								<img src="images/no-img.png" class=" img-responsive ">
+							</div>
+						</div>
+						<div ng-show="msg.type == 'receive'" class="row msg_container base_receive">
+							<div class="col-md-2 col-xs-2 avatar">
+								<img src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=50" class=" img-responsive ">
+							</div>
+							<div class="col-md-10 col-xs-10">
+								<div class="messages msg_receive">
+									<p>{{msg.msg}}</p>
+									<time datetime="2009-11-13T20:00">{{msg.user}} • 51 min</time>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel-footer">
+					<div class="input-group">
+						<input ng-model="msgToSend" id="btn-input" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." />
+						<span class="input-group-btn">
+							<button ng-click="sendMsg()" class="btn btn-primary btn-sm" id="btn-chat">Send</button>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div ng-hide="ready" class="loader"><img ng-src="images/loader.svg">
+	</div>
+</div>
+<script type="text/ng-template" id="appNotFoundModal">
+    <div class="ngdialog-message">
+        <h2><i class="fa fa-exclamation-triangle"></i> Application inaccessible!!</h2>
+        <p>Merci de vérifier votre connexion internet ou contacter l'administrateur du système. </p>
+
+    </div>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal()" class="btn btn-default">OK</button>
+    </div>
+</script>

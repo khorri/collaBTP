@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Facture - RCMAROC</title>
+	<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
+	<style>
+		body {
+			background: white;
+			line-height: .6cm;
+			font-family: 'Raleway', sans-serif;
+			font-weight: normal;
+		}
+		
+		page[size="A4"] {
+			position: relative;
+			background: white;
+			width: 210mm;
+			height: 211mm;
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+			border: solid 1px transparent;
+			width: 80%;
+		}
+		
+		.page-content {
+			height: 100%;
+			width: 100%;
+		}
+		
+		.footer {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			margin: auto;
+			width: 900px;
+			margin-left: auto;
+			margin-right: auto;
+			border-top: solid 1px transparent;
+			text-align: right;
+			font-size: 12px;
+			width: 100%;
+			text-align: center;
+			color: #A4A4A4;
+		}
+		
+		#logo {
+			text-align: center;
+			border-bottom: solid 1px #8C8C8C;
+			width: 100%;
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		
+		#company {
+			text-align: center;
+			color: #A4A4A4;
+		}
+		
+		#company h2 {
+			font-weight: normal;
+		}
+		
+		.col-md-4 {
+			width: 33.33333333%;
+			float: left;
+		}
+		
+		.col-md-5 {
+			width: 41.6666667%;
+			float: left;
+		}
+		
+		.col-md-6 {
+			width: 50%;
+			float: left;
+		}
+		
+		.col-md-8 {
+			width: 63.66666666%;
+			float: left;
+		}
+		
+		.col-md-10 {
+			width: 83.33333333%;
+			float: left;
+		}
+		
+		.col-md-12 {
+			width: 100%;
+			float: left;
+		}
+
+		
+		.factureid {
+			margin-top: 60px;
+			margin-bottom: 20px;
+		}
+
+		
+		.bs-example>.alert:last-child,
+		.bs-example>.form-control:last-child,
+		.bs-example>.jumbotron:last-child,
+		.bs-example>.list-group:last-child,
+		.bs-example>.navbar:last-child,
+		.bs-example>.panel:last-child,
+		.bs-example>.progress:last-child,
+		.bs-example>.table-responsive:last-child>.table,
+		.bs-example>.table:last-child,
+		.bs-example>.well:last-child,
+		.bs-example>blockquote:last-child,
+		.bs-example>ol:last-child,
+		.bs-example>p:last-child,
+		.bs-example>ul:last-child {
+			margin-bottom: 0;
+		}
+		
+		.table {
+			width: 100%;
+			max-width: 100%;
+			margin-bottom: 20px;
+			margin-top: 10px;
+		}
+		
+		table {
+			background-color: transparent;
+		}
+		
+		table {
+			border-spacing: 0;
+			border-collapse: collapse;
+		}
+		
+		.table-striped>tbody>tr:nth-of-type(odd) {
+			background-color: #f9f9f9;
+		}
+		
+		.table>tbody>tr>td,
+		.table>tbody>tr>th,
+		.table>tfoot>tr>td,
+		.table>tfoot>tr>th,
+		.table>thead>tr>td,
+		.table>thead>tr>th {
+			padding: 8px;
+			line-height: 1.42857143;
+			vertical-align: top;
+			border-top: 1px solid #ddd;
+		}
+		
+		th {
+			text-align: left;
+		}
+		
+		label {
+			width: 100%;
+			float: left;
+		}
+		
+		label.total {
+			margin-top: 10px;
+			padding-top: 10px;
+			border-top: solid 1px #ddd;
+		}
+		
+		.amount-container {
+			float: right;
+			margin-top: 10px;
+			padding: 5px;
+			border: solid 2px #DDD;
+			border-radius: 5px;
+			text-align: center;
+		}
+
+        .box-container {
+            margin-top: 10px;
+            padding: 5px;
+            border: solid 2px #DDD;
+            border-radius: 5px;
+            text-align: center;
+        }
+		.date{
+			position: absolute;
+			bottom: 50px;
+		}
+
+        .price-words{
+            margin-top: 40px;
+            float: left;
+        }
+	</style>
+</head>
+
+<body>
+	<page size="A4">
+		<div class="page-content">
+			<main>
+				<div class="factureid col-md-12">
+					<div class="col-md-8">
+                        <strong>Facture</strong> {{factureRef}}<br>
+                        <div class="box-container col-md-8">
+                            Ref: {{projectRef}}<br>
+                            Affaire: {{projectName}}<br>
+                        </div>
+					</div>
+                    <div class="col-md-4 box-container">
+                        {{customerCompany}}
+                        <br>{{customerAddress}} {{customerCity}}
+                    </div>
+				</div>
+				<div class="table">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>D&eacute;signation</th>
+								<th>Montant</th>
+							</tr>
+						</thead>
+						<tbody>
+							{{#each pms}}
+							<tr>
+								<th scope="row">{{inc @index}}</th>
+								<td>{{this.percentage}}% {{this.label}}</td>
+								<td>{{toFixed this.amount 2}} DH </td>
+							</tr>
+							{{/each}}
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-12">
+					<div class="col-md-5 amount-container">
+						<label>Total HT: {{toFixed amountHT 2}} DH</label>
+						<label>Taxe 20%: {{toFixed taxe 2}} DH</label>
+						<label class="total"><strong>Total TTC: {{toFixed amountTTC 2}} DH</strong>
+						</label>
+					</div>
+				</div>
+                <div class="price-words">
+                    Arr&acirc;ter &egrave; la somme: {{amountInWords}}
+                </div>
+				<div class="date">
+					Fait &agrave; Casablanca le, {{factureDate}}
+				</div>
+			</main>
+		</div>
+	</page>
+</body>
+
+</html>

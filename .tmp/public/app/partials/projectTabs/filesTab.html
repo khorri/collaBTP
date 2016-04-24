@@ -1,0 +1,288 @@
+<div class="box border no-top col-md-12">
+    <div class="box-body col-md-12">
+        <h1>Documents</h1>
+        <button type="button" ng-click="openAddDocModal()" class="btn btn btn-primary">
+            <i class="fa fa-plus"></i> Nouveau
+        </button>
+        <!-- Types DATATABLE -->
+        <table st-table="displayedCollection" st-safe-src="documents" class="table table-striped">
+            <thead>
+            <tr>
+                <th colspan="10">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1"><i class="fa fa-search"></i></span>
+                        <input st-search="" st-delay="100" class="form-control" placeholder="Recherche globale"
+                               type="text"/>
+                    </div>
+                </th>
+            </tr>
+            <tr>
+                <th>#</th>
+                <th>Type</th>
+                <th>Nom</th>
+                <th>Titre</th>
+                <th>Commentaire</th>
+                <th>Modifié le</th>
+                <th>Editeur</th>
+                <th>Taille</th>
+                <th>Version</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="f in displayedCollection track by $index">
+                <td>{{ $index + 1}}</td>
+                <td>
+                    <file-icon type="{{f.type}}" size="fa-3" file="f"></file-icon>
+                </td>
+                <td ng-show="f.size>0"><a href="{{f.webPath}}">{{ f.name | truncate: 35 :'...' }}</a></td>
+                <td ng-hide="f.size>0">{{ f.name | truncate: 35 :'...' }}</td>
+                <td>{{ f.title | truncate: 35 :'...' }}</td>
+                <td><span tooltip="{{ f.description}}">{{ f.description | truncate: 35 :'...' }}</span></td>
+                <td>{{ f.createdAt | date:'dd/MM/yyyy' }}</td>
+                <td>{{ f.createdBy.name }}</td>
+                <td>{{f.size | FileSize}}</td>
+                <td>{{f.lastVersion || '---'}}</td>
+                <td>
+                    <button ng-click="openUploadDialog(f)" class="show-btn btn btn-success">
+                        <i class="fa fa-cloud-upload"></i>
+                    </button>
+                    <button ng-click="openDeleteDocModal(f);" class="show-btn btn btn-danger">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                    <div class="btn-group" dropdown>
+                        <button type="button" class="show-btn btn btn-primary dropdown-toggle" ng-disabled="disabled">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu sm" role="menu">
+                            <li><a href="" ng-click="openEditDialog(f)"><i class="fa fa-edit"></i> Modifier</a>
+                            </li>
+                            <li ng-show="f.versions && f.versions.length>1"><a href="" ng-click="showHistoryVersionDocModal(f)"><i class="fa fa-history"></i> Afficher l'historique</a>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="10" class="text-center">
+                    <div st-pagination="" st-items-by-page="10" st-displayed-pages="10"></div>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+        <div ng-hide="documents.length>0" class="no-project">
+            <h4>Aucun élément à afficher</h4>
+        </div>
+
+    </div>
+</div>
+<script type="text/ng-template" id="DeleteDocModal">
+    <div class="ngdialog-message">
+        <h3>Suppression d'un document</h3>
+
+        <p>Voulez-vous vraiment supprimer ce document?</p>
+    </div>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="deleteDocument($parent.currentDocument);closeModal();" class="btn btn-primary">Confirmer
+        </button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+<script type="text/ng-template " id="addDocumentModal">
+    <h2>Nouveau document: </h2>
+    <form class="form-horizontal col-md-12" name="newDocumentForm">
+
+
+        <div class="form-group col-md-12">
+            <div class="form-group">
+                <label>Titre <sup class="text-danger"></sup>
+                </label>
+                <input type="text" ng-model="$parent.fileName" class="form-control"
+                       placeholder="Insérez le titre du document" ng-maxlength=200>
+            </div>
+            <div class="form-group">
+                <label>Commentaire<sup class="text-danger"></sup>
+                </label>
+                <textarea class="form-control" ng-model="$parent.fileDescription"
+                          placeholder="Insérez un commentaire"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Fichier <sup class="text-danger"></sup>
+                </label>
+
+                <div>
+                    <div class="drop document" ng-file-drop=" " ng-file-select=" " ng-model="$parent.files"
+                         ng-model-rejected="rejFiles "
+                         drag-over-class="{accept: 'dragover', reject: 'dragover-err', delay:100} " class="drop-box "
+                         ng-multiple="true " allow-dir="false " ng-accept=" '*' ">
+                        Cliquer ou glisser-déposer le fichier
+                    </div>
+                    <div ng-show="files.length>0">
+                        <div class="file-container dialog-upload-container" ng-repeat="f in files">
+                            <div class="thumbnail file col-md-2">
+                                <i class="fa fa-file-pdf-o fa-3x"></i>
+                            </div>
+                            <span class="title">{{f.name}} - {{f.size|FileSize}}</span>
+                            <progressbar ng-show="progressPercentage >= 0" animate="true" value="progressPercentage"
+                                         type="success">{{progressPercentage}}%
+                            </progressbar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="createDocument()" class="btn btn-primary"
+                ng-disabled="(!fileName && !newDocument.isUploaded) || isCreatingNewDocument"><i class="fa"
+                                                                                   ng-class="{'fa-plus': !isCreatingNewDocument,  'fa-circle-o-notch': isCreatingNewDocument}"></i>
+            Créer un nouveau document
+        </button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+
+<script type="text/ng-template " id="uploadDocumentModal">
+    <h2>Mettre le fichier à jour: </h2>
+    <form class="form-horizontal col-md-12" name="newVersionDocumentForm" role="form">
+
+
+        <div class="form-group col-md-12">
+            <div class="form-group col-md-6">
+                <label>Cette version contient: <sup class="text-danger"></sup>
+                </label>
+                <div class="radio radio-success">
+                    <input type="radio" id="checkbox1" name="checkbox1" value="{{$parent.minorVersion}}" ng-model="$parent.version" checked>
+                    <label for="checkbox1" class="radio-lbl">
+                        changements mineurs ({{$parent.minorVersion}})
+                    </label>
+                </div>
+                <div class="radio radio-success" ng-if="$parent.currentDocument.lastVersion">
+                    <input type="radio" id="checkbox2" name="checkbox1" value="{{$parent.majorVersion}}" ng-model="$parent.version">
+                    <label for="checkbox2" class="radio-lbl">
+                        changements majeurs ({{$parent.majorVersion}})
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Commentaire <sup class="text-danger"></sup>
+                </label>
+                <textarea class="form-control" ng-model="$parent.comment"
+                          placeholder="Insérez un commentaire"></textarea>
+            </div>
+            <div class="form-group">
+
+                <div>
+                    <div class="drop" ng-file-drop=" " ng-file-select=" " ng-model="$parent.files"
+                         ng-model-rejected="rejFiles "
+                         drag-over-class="{accept: 'dragover', reject: 'dragover-err', delay:100} " class="drop-box "
+                         ng-multiple="true " allow-dir="false " ng-accept=" '*' ">
+                        Cliquer ou glisser-déposer le fichier
+                    </div>
+                    <div ng-show="files.length>0">
+                        <div class="file-container dialog-upload-container" ng-repeat="f in files">
+                            <div class="thumbnail file col-md-2">
+                                <i class="fa fa-file-pdf-o fa-3x"></i>
+                            </div>
+                            <span class="title">{{f.name}} - {{f.size|FileSize}}</span>
+                            <progressbar ng-show="progressPercentage >= 0" animate="true" value="progressPercentage"
+                                         type="success">{{progressPercentage}}%
+                            </progressbar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="importNewVersion($parent.currentDocument)" class="btn btn-primary"
+                ng-disabled="!$parent.newDocument.isUploaded"><i class="fa"
+                                                                                                 ng-class="{'fa-plus': !isCreatingNewDocument,  'fa-circle-o-notch': isCreatingNewDocument}"></i>
+            Importer une nouvelle version
+        </button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+<script type="text/ng-template " id="historyDocumentModal">
+    <h2>Historique des versions: </h2>
+
+    <div class="form-group col-md-12">
+        <timeline>
+            <!-- can also hard-code to side="left" or side="right" -->
+            <timeline-event ng-repeat="event in events" side="{{side}}">
+                <!-- uses angular-scroll-animate to give it some pop -->
+                <timeline-badge class="{{event.badgeClass}} timeline-hidden"
+                                when-visible="animateElementIn" when-not-visible="animateElementOut">
+                    <!-- i class="glyphicon {{event.badgeIconClass}}"></i-->
+                    <img class="img-circle" src="images/no-img.png" alt="User Pic">
+                </timeline-badge>
+
+                <!-- uses angular-scroll-animate to give it some pop -->
+                <timeline-panel class="{{event.badgeClass}} timeline-hidden"
+                                when-visible="animateElementIn" when-not-visible="animateElementOut">
+                    <timeline-heading>
+                        <h4 class="event-title">{{event.title}}</h4>
+                        <span ng-if="event.versionNumber" class="label label-success label-version">{{event.versionNumber}}</span>
+                        <p ng-if="event.when">
+                            <small class="text-muted"><i class="glyphicon glyphicon-time"></i>{{event.when}}</small>
+                        </p>
+                        <p ng-if="event.titleContentHtml" ng-bind-html="event.titleContentHtml">
+                        </p>
+                    </timeline-heading>
+                    <p ng-bind-html="event.contentHtml"></p>
+                    <timeline-footer ng-if="event.footerContentHtml" class="event-footer">
+                        <span compile="event.footerContentHtml"></span>
+                    </timeline-footer>
+                </timeline-panel>
+            </timeline-event>
+        </timeline>
+    </div>
+
+</script>
+
+<script type="text/ng-template" id="DeleteVersionDocModal">
+    <div class="ngdialog-message">
+        <h3>Suppression d'un document</h3>
+
+        <p>Voulez-vous vraiment supprimer ce document?</p>
+    </div>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="removeVersion($parent.currentVersion);" class="btn btn-primary">Confirmer
+        </button>
+        <button ng-click="closeDeleteModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+
+<!-- ------------ Modification -------------------------->
+<script type="text/ng-template " id="updateDocumentModal">
+    <h2>Nouveau document: </h2>
+    <form class="form-horizontal col-md-12" name="updateDocumentForm">
+
+
+        <div class="form-group col-md-12">
+            <div class="form-group">
+                <label>Titre <sup class="text-danger"></sup>
+                </label>
+                <input type="text" ng-model="$parent.currentDocument.title" class="form-control"
+                       placeholder="Insérez le titre du document" ng-maxlength=200>
+            </div>
+            <div class="form-group">
+                <label>Commentaire<sup class="text-danger"></sup>
+                </label>
+                <textarea class="form-control" ng-model="$parent.currentDocument.description"
+                          placeholder="Insérez un commentaire"></textarea>
+            </div>
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="updateDocument()" class="btn btn-primary"
+                ng-disabled="!$parent.currentDocument"><i class="fa fa-edit"></i>
+            Modifier le document
+        </button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>

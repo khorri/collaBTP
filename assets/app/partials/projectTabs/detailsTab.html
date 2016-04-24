@@ -1,0 +1,209 @@
+<div class="box border no-top col-md-12">
+	<div class="box-body col-md-12">
+		<h1 ng-hide="isProjectEdit">Détails du projet {{}}</h1>
+		<h1 ng-show="isProjectEdit">Modification du projet <small>{{project.name}} ({{project.ref}})</small></h1>
+		<div sticky offset="100" class="actions-btn">
+			<button ng-hide="isProjectEdit" ng-click="editProject()" class="btn btn btn-primary">
+				<i class="fa fa-edit"></i> Modifier
+			</button>
+			<button ng-hide="isProjectEdit" ng-click="" class="btn btn-success">
+				<i class="fa fa-check"></i> Terminer le projet
+			</button>
+			<button ng-show="isProjectEdit" ng-disabled="!updateProject.$valid || isUpdating" ng-click="saveProject()" class="btn btn btn-success">
+				<i class="fa" ng-class="{'fa-save': !isUpdating, 'fa-circle-o-notch fa-spin':isUpdating}"></i> Enregistrer
+			</button>
+			<button ng-show="isProjectEdit" ng-click="cancelEditProject()" class="btn btn-default">
+				<i class="fa fa-times"></i> Annuler
+			</button>
+		</div>
+		<div class="status-container">
+			<span ng-if="project.status =='new'" class="label label-info">{{project.status}}</span>
+			<span ng-if="project.status =='Waiting for signing'" class="label label-danger">{{project.status}}</span>
+			<span ng-if="project.status =='Contract signed'" class="label label-success">{{project.status}}</span>
+			<span ng-if="project.status =='Document examination'" class="label label-warning">{{project.status}}</span>
+			<span ng-if="project.status =='Site visits'" class="label label-primary">{{project.status}}</span>
+		</div>
+		<div class="col-md-12" ng-hide="isProjectEdit">
+			<div class="col-md-12">
+				<small><em>Paiement</em></small>
+				<progressbar value="claculatePayed()" max="calculateTotalBudget(subprojects)" type="success"><b><span ng-show="claculatePayed()>0">{{claculatePayed() | currency:""}} DH / {{calculateTotalBudget(subprojects)| currency:""}} DH</span></b></progressbar>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label class="pre-label">Référence du projet:</label>
+					<label><span>{{project.ref}}</span>
+					</label>
+				</div>
+				<div class="form-group">
+					<label class="pre-label">Nom du projet:</label>
+					<label><span>{{project.name}}</span>
+					</label>
+				</div>
+				<div class="form-group">
+					<label class="pre-label">Chef de projet:</label>
+					<label><span>{{project.projectLeader.name}}</span>
+					</label>
+				</div>
+				<div class="form-group">
+					<label class="pre-label">Adresse:</label>
+					<label>{{project.address}} - {{project.city}}</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label class="pre-label">Budget:</label>
+					<label>{{calculateTotalBudget(subprojects)| currency:""}} DH</label>
+				</div>
+				<div class="form-group">
+					<label class="pre-label">Client:</label>
+					<label>{{project.customer.company}}</label>
+				</div>
+				<div class="form-group">
+					<label class="pre-label">Date de debut du projet: </label>
+					<span>{{project.starts | date:'dd/MM/yyyy'}}</span>
+				</div>
+				<div class="form-group">
+					<label class="pre-label">Date de fin du projet:</label>
+					<span ng-if="project.ends">{{project.ends | date:'dd/MM/yyyy'}}</span>
+					<span class="label label-default" ng-if="!project.ends">Non defini</span>
+				</div>
+			</div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="chart-lebel pre-label">Durée du projet:
+
+                        <span ng-if="project.ends" style="color:#333;">{{totalMonths}} mois</span>
+                        <span class="label label-default" ng-if="!project.ends">Non defini</span>
+                    </label>
+                    <span ng-if="project.ends" class="chart center-block" easypiechart  percent="percent" options="options">
+                        <span class="percent"  ng-bind="restMonths"></span>
+                    </span>
+                </div>
+
+            </div>
+			<div class="col-md-12">
+				<div class="col-md-6">
+					<label class="pre-label col-md-12">Collaborateurs au projet:</label>
+					<a ng-repeat="contributor in project.contributors" class="contributor col-md-3">
+						<i class="fa fa-user fa-3x"></i>
+						<div>{{contributor.name}}</div>
+					</a>
+				</div>
+				<div class="col-md-6">
+					<label class="pre-label col-md-12">Participants au projet: </label>
+					<a ng-repeat="participant in project.participants" class="contributor col-md-3" popover="{{participant.company}} ({{participant.contactPerson}}) 
+																												   Tel:{{participant.phone}}  
+																												   email:{{participant.email}}" popover-trigger="click">
+						<i class="fa fa-building fa-3x"></i>
+						<div>{{participant.company}}</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12" ng-show="isProjectEdit">
+			<form name="updateProject">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label class="pre-label">Nom du projet <sup class="text-danger">*</sup>
+						</label>
+						<input type="text" ng-model="tmpProject.name" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Chef de projet <sup class="text-danger">*</sup>
+						</label>
+						<ui-select theme="select2" ng-model="tmpProject.projectLeader" required>
+							<ui-select-match placeholder="">{{$select.selected.name}}</ui-select-match>
+							<ui-select-choices repeat="user in allDirectersEngineers | filter: $select.search">
+								<span ng-bind-html="user.name"></span>
+							</ui-select-choices>
+						</ui-select>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Collaborateurs <sup class="text-danger">*</sup>
+						</label>
+						<ui-select multiple theme="select2" ng-model="tmpProject.contributors" required on-remove="removeFromContributors($item, $model)" on-select="addToContributors($item, $model)">
+							<ui-select-match placeholder="">{{$item.name}}</ui-select-match>
+							<ui-select-choices repeat="user in allContributorsToEdit | filter: $select.search">
+								{{user.name}}
+							</ui-select-choices>
+						</ui-select>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Ville <sup class="text-danger">*</sup>
+						</label>
+						<input class="form-control" ng-model="tmpProject.city" required>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Adresse <sup class="text-danger">*</sup>
+						</label>
+						<textarea class="form-control" ng-model="tmpProject.address" required></textarea>
+					</div>
+				</div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="pre-label">Durée du projet <sup class="text-danger">*</sup>
+                        </label>
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="number" class="form-control" min=1 ng-model="durationTime"
+                                       placeholder="Insérer la durée du projet" required>
+
+                                <div class="input-group-addon">MOIS</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				<div class="col-md-6">
+                    <div class="form-group">
+                        <label class="pre-label">Date de début du projet</label>
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" role="button" data-target="#" href="#">
+                                <div class="input-group">
+                                    <input type="text" class="form-control project-date" data-ng-model="projectStarts" readonly><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu date-picker" role="menu" aria-labelledby="dLabel" >
+                                <datetimepicker data-ng-model="tmpProject.starts" data-datetimepicker-config="{ minView: 'day' }" on-set-time="startsTimeChosen()"></datetimepicker>
+                            </ul>
+                        </div>
+                    </div>
+
+					<div  class="form-group">
+						<label class="pre-label">Date de fin du projet :</label>
+						<div class="dropdown">
+							<a class="dropdown-toggle" role="button" data-target="#" href="#">
+								<div class="input-group">
+									<input type="text" class="form-control project-date" data-ng-model="projectEnds" readonly><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+								</div>
+							</a>
+							<ul class="dropdown-menu date-picker" role="menu" aria-labelledby="dLabel">
+								<datetimepicker data-ng-model="tmpProject.ends" data-datetimepicker-config="{ minView: 'day' }" on-set-time="endsTimeChosen()"></datetimepicker>
+							</ul>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Client <sup class="text-danger">*</sup>
+						</label>
+						<ui-select theme="select2" ng-model="tmpProject.customer" required>
+							<ui-select-match placeholder="">{{$select.selected.company}}</ui-select-match>
+							<ui-select-choices repeat="customer in allCustomers | filter: $select.search">
+								{{customer.company}} ({{customer.contactPerson}})
+							</ui-select-choices>
+						</ui-select>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Participants <sup class="text-danger">*</sup>
+						</label>
+						<ui-select multiple theme="select2" ng-model="tmpProject.participants" required on-remove="removeFromParticipants($item, $model)" on-select="addToParticipants($item, $model)">
+							<ui-select-match>{{$item.company}} ({{$item.contactPerson}})</ui-select-match>
+							<ui-select-choices repeat="participant in allParticipantsToEdit | filter: $select.search">
+								{{participant.company}} ({{participant.contactPerson}})
+							</ui-select-choices>
+						</ui-select>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

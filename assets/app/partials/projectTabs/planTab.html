@@ -1,0 +1,76 @@
+<div class="box border no-top col-md-12">
+    <div class="box-body col-md-12">
+        <h1>Plans</h1>
+        <a href="#/project/{{project.id}}/addplan" class="btn btn btn-primary">
+			<i class="fa fa-plus"></i> Nouveau
+		</a>
+        <!-- Types DATATABLE -->
+        <table st-table="displayedCollection" st-safe-src="plans" class="table table-striped">
+            <thead>
+                <tr>
+                    <th colspan="10">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1"><i class="fa fa-search"></i></span>
+                            <input st-search="" st-delay="100" class="form-control" placeholder="Recherche globale" type="text" />
+                        </div>
+                    </th>
+                </tr>
+                <tr>
+                    <th>#</th>
+                    <th>Référence</th>
+                    <th>Plan</th>
+                    <th>Date debut</th>
+                    <th>Date fin</th>
+                    <th>Editeur</th>
+                    <th>Avancement</th>
+                    <th>Status</th>
+                    <th>Version</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="p in displayedCollection track by $index">
+                    <td>{{ $index + 1}}</td>
+                    <td>{{ p.ref}}</td>
+                    <td>{{ p.name }}</td>
+                    <td>{{ p.starts | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ p.ends | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ p.editor.name }}</td>
+                    <td>20%</td>
+                    <td>{{ p.status }}</td>
+                    <td>{{ p.lastVersion }}</td>
+                    <td>
+                        <button ng-click="" class="show-btn btn btn-success">
+                            <i class="fa fa-cloud-upload"></i>
+                        </button>
+                        <button ng-click="" class="show-btn btn btn-primary">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        <button ng-click="openDeleteDialog(p);" class="show-btn btn btn-danger">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="10" class="text-center">
+                    <div st-pagination="" st-items-by-page="10" st-displayed-pages="10"></div>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+        <div ng-hide="plans.length>0" class="no-project">
+					<h4>Aucun élément à afficher</h4>
+				</div>
+    </div>
+</div>
+<script type="text/ng-template" id="deletePlanDialog">
+    <div class="ngdialog-message">
+        <h2>Voulez-vous vraiment supprimer le plan: <b>{{selectedPlan.name}}</b> ?</h2>
+    </div>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="deletePlan(selectedPlan);closeModal();" class="btn btn-primary">Confirmer</button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>

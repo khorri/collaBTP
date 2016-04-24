@@ -1,0 +1,5 @@
+VM => Plans d'action => Nouveau/Modifier => 10.Préscription => erreur de chargement (JList <> JTable).
+VM => Plans d'action => Nouveau/Modifier => 10.Préscription => choix niveau prescription (JTable).
+DR => Plans d'action => Modifier plan    => 11.Cibles       => erreur de chargement (JList <> JTable).
+DR => Plans d'action => Modifier plan    => 11.Cibles       => choix niveau prescription (JTable).
+/// DR => Rapport journaliers =>   Menu "Nouveau Rapport" => Button 'Nouveau' Invisible .

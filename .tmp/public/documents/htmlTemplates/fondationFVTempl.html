@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>VISITE DE CHANTIER - RCMAROC</title>
+    <link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
+    <style>
+        body {
+            background: white;
+            line-height: .6cm;
+            font-family: 'Raleway', sans-serif;
+            font-weight: normal;
+            font-size: 10px;
+        }
+
+        page[size="A4"] {
+            position: relative;
+            background: white;
+            width: 210mm;
+            height: 257mm;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border: solid 1px transparent;
+            width: 80%;
+        }
+
+        .page-content {
+            height: 100%;
+            width: 100%;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            border-top: solid 1px #8C8C8C;
+            text-align: right;
+            font-size: 12px;
+            width: 100%;
+            text-align: center;
+            color: #A4A4A4;
+        }
+
+        #logo {
+            text-align: center;
+            border-bottom: solid 1px #8C8C8C;
+            width: 100%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #company {
+            text-align: center;
+            color: #A4A4A4;
+        }
+
+        #company h2 {
+            font-weight: normal;
+        }
+
+        .col-md-4 {
+            width: 33.33333333%;
+            float: left;
+        }
+
+        .col-md-5 {
+            width: 41.6666667%;
+            float: left;
+        }
+
+        .col-md-6 {
+            width: 50%;
+            float: left;
+        }
+
+        .col-md-8 {
+            width: 66.66666666%;
+            float: left;
+        }
+
+        .col-md-10 {
+            width: 83.33333333%;
+            float: left;
+        }
+
+        .col-md-12 {
+            width: 100%;
+            float: left;
+        }
+
+        .text-left {
+            text-align: left !important;
+        }
+
+        .text-right {
+            text-align: right !important;
+        }
+
+        .first-page {
+            text-align: center;
+            font-size: 20px;
+            te
+        }
+
+        .bs-example>.alert:last-child,
+        .bs-example>.form-control:last-child,
+        .bs-example>.jumbotron:last-child,
+        .bs-example>.list-group:last-child,
+        .bs-example>.navbar:last-child,
+        .bs-example>.panel:last-child,
+        .bs-example>.progress:last-child,
+        .bs-example>.table-responsive:last-child>.table,
+        .bs-example>.table:last-child,
+        .bs-example>.well:last-child,
+        .bs-example>blockquote:last-child,
+        .bs-example>ol:last-child,
+        .bs-example>p:last-child,
+        .bs-example>ul:last-child {
+            margin-bottom: 0;
+        }
+
+        table {
+            background-color: transparent;
+            width: 100%;
+        }
+
+        table {
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+
+        .table-striped>tbody>tr:nth-of-type(odd) {
+            background-color: #f9f9f9;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        td {
+            border: solid 1px #ddd;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        label {
+            width: 100%;
+            float: left;
+        }
+
+        label.total {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: solid 1px #ddd;
+        }
+    </style>
+</head>
+
+<body>
+<page size="A4">
+    <table style="border:none">
+        <tr>
+            <td style="border:none;padding-right:0px" align="left" width="100"><img src="http://www.rcomaroc.com/wp-content/uploads/2014/12/LOGO12.jpg"/> </td>
+            <td style="border:none;width:25%;padding-left:0px"><h1>Risk Control</h1> <h3>Bureau de Contr&ocirc;le</h3></td>
+            <td style="border:none"><h1 align="left">Fiche de contr&ocirc;le par sondage</h1></td>
+        <tr>
+    </table>
+    <table style="border:none">
+        <tbody>
+        <tr>
+            <td align="left" colspan="4">
+                <strong>Affaire : </strong>{{projectName}}
+            </td>
+            <td width="30%" colspan="3" align="left">
+                <strong>Version : 1/2014</strong>
+                <br/>
+                <strong>N° Dossier : </strong>{{projectRef}}
+
+
+            </td>
+
+        </tr>
+        <tr>
+            <td align="left" colspan="3">
+                <strong>Date de visite : </strong>{{activityDate}}
+            </td>
+            <td align="left" width="30%">
+                <strong>N° Visite : </strong>
+            </td>
+            <td align="left"><strong>C:</strong></td>
+            <td align="left"><strong>NC:</strong></td>
+            <td align="left"><strong>S:</strong></td>
+        </tr>
+        <tr>
+            <td align="left" colspan="3">
+                <strong>Intervenant : </strong>{{contributor}}
+            </td>
+            <td align="left" width="30%">
+                <strong>Pilote : </strong>{{projectLeader}}
+            </td>
+            <td align="left">Conforme</td>
+            <td align="left">Non Conforme</td>
+            <td align="left">Suspendu</td>
+
+        </tr>
+        <tr>
+            <td colspan="3"><strong>&Eacute;taient pr&eacute;sent</strong></td>
+            <td colspan="4"></td>
+
+        </tr>
+        <tr>
+            <td colspan="3">
+                <strong>Ouvrage Examin&eacute; :</strong>
+            </td>
+            <td colspan="4">
+                {{description}}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3"><strong>Sondages Examin&eacute;s :</strong></td>
+            <td colspan="4"></td>
+        </tr>
+        <tr>
+            <td colspan="2" rowspan="3"><strong>Sol d'assise des fondations :</strong></td>
+            <td colspan="3">&nbsp;</td>
+            <td align="center" valign="middle"><strong>Oui</strong></td>
+            <td align="center" valign="middle"><strong>Non</strong></td>
+        </tr>
+        <tr>
+            <td colspan="3">Le Laboratoire a r&eacute;ceptionn&eacute; le bon sol :</td>
+            <td align="center" valign="middle">
+                <div style="height:8px;width:8px; border:1px solid #000"></div>
+            </td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+        </tr>
+
+        <tr>
+            <td colspan="5" align="center">Si OUI nous fournir PV de r&eacute;ception</td>
+        </tr>
+        <tr>
+            <td colspan="2" rowspan="5"><strong>Ferraillages :</strong></td>
+            <td colspan="2">&nbsp;</td>
+            <td align="center" valign="middle"><strong>C</strong></td>
+            <td align="center" valign="middle"><strong>NC</strong></td>
+            <td align="center" valign="middle"><strong>S</strong></td>
+        </tr>
+        <tr>
+            <td colspan="2">Espacement</td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+        </tr>
+        <tr>
+            <td colspan="2">Nombre des barres</td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+        </tr>
+        <tr>
+            <td colspan="2">Nuance d'acier</td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+        </tr>
+        <tr>
+            <td colspan="2">Coudes</td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+        </tr>
+        <tr>
+            <td colspan="2" rowspan="4"><strong>Coffrage :</strong></td>
+            <td colspan="2">&nbsp;</td>
+            <td align="center" valign="middle"><strong>C</strong></td>
+            <td align="center" valign="middle"><strong>NC</strong></td>
+            <td align="center" valign="middle"><strong>S</strong></td>
+        </tr>
+        <tr>
+            <td colspan="2">Dimensionnement</td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+        </tr>
+        <tr>
+            <td colspan="2">&nbsp;</td>
+            <td align="center" valign="middle"><strong>Bonne</strong></td>
+            <td align="center" valign="middle"><strong>Moyenne</strong></td>
+            <td align="center" valign="middle"><strong>M&eacute;diocre</strong></td>
+        </tr>
+        <tr>
+            <td colspan="2">Qualit&eacute; du coffrage</td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+        </tr>
+        <tr>
+            <td colspan="2" rowspan="2"><strong>Axiometrie :</strong></td>
+            <td colspan="2">&nbsp;</td>
+            <td align="center" valign="middle"><strong>C</strong></td>
+            <td align="center" valign="middle"><strong>NC</strong></td>
+            <td align="center" valign="middle"><strong>S</strong></td>
+        </tr>
+        <tr>
+            <td colspan="2">FUT poteau &agrave; l'axe de la semmelle :</td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+        </tr>
+        <tr>
+            <td colspan="2" rowspan="2"><strong>Enrobage :</strong></td>
+            <td colspan="2">&nbsp;</td>
+            <td align="center" valign="middle"><strong>C</strong></td>
+            <td align="center" valign="middle"><strong>NC</strong></td>
+            <td align="center" valign="middle"><strong>S</strong></td>
+        </tr>
+        <tr>
+            <td colspan="2">Les cales</td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+        </tr>
+        <tr>
+            <td colspan="2" rowspan="3"><strong>Avis :</strong></td>
+            <td colspan="4" align="justify" valign="middle">Accord pour coulage</td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+        </tr>
+        <tr>
+            <td colspan="4" align="justify" valign="middle">Accord pour coulage apr&egrave;s lever les r&eacute;serves</td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+        </tr>
+        <tr>
+            <td colspan="4" align="justify" valign="middle">Interdit de coulage</td>
+            <td align="center" valign="middle"><div style="height:8px;width:8px; border:1px solid #000"></div></td>
+        </tr>
+        <tr>
+            <td colspan="2"><strong>Laboratoire :</strong></td>
+            <td colspan="5">
+                Faire appel au laboratoire pour effectuer les pr&eacute;l&egrave;vements du b&eacute;ton et nous transmettre les r&eacute;sultats des essais d'&eacute;crasement pour examen et avis
+            </td>
+        </tr>
+        <tr>
+            <td height="100" colspan="2"><strong>Remarques :</strong></td>
+            <td colspan="5">
+            </td>
+        </tr>
+
+
+
+        </tbody>
+    </table>
+</page>
+</body>
+
+</html>

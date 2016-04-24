@@ -1,0 +1,156 @@
+<div class="box border no-top">
+    <div class="box-body">
+        <h1>Intervenants</h1>
+        <button ng-click="openAddParticipantModal()" class="btn btn btn-primary">
+            <i class="fa fa-plus"></i> Nouveau
+        </button>
+        <table st-table="displayedPartCollection" st-safe-src="participants" class="table table-striped">
+            <thead>
+            <tr>
+                <th colspan="10">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1"><i class="fa fa-search"></i></span>
+                        <input st-search="" st-delay="100" class="form-control" placeholder="Recherche globale" type="text" />
+                    </div>
+                </th>
+            </tr>
+                <tr>
+                    <th>Personne de Contact</th>
+                    <th>Société</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Qualité</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="participant in displayedPartCollection track by $index">
+                    <td>{{ participant.contactPerson }}</td>
+                    <td>{{ participant.company }}</td>
+                    <td>{{ participant.email }}</td>
+                    <td>{{ participant.cellphone }}</td>
+                    <td>{{ participant.type.name }}</td>
+                    <td>
+                        <button ng-click="openUpdateParticipantModal(participant.id)" class="show-btn btn btn-primary">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        <button ng-click="openDeleteParticipantModal(participant.id)" class="show-btn btn btn-danger">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="10" class="text-center">
+                    <div st-pagination="" st-items-by-page="10" st-displayed-pages="10"></div>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<script type="text/ng-template " id="addParticipantModal">
+    <h2>Nouvel intervenant:</h2>
+    <form class="col-md-12" name="addParticipantForm">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="pre-label">Qualité de l'intervenant <sup class="text-danger">*</sup></label>
+                <select ui-select2 ng-model="newPart.type" required>
+                    <option ng-repeat="type in allTypes" value="{{type.id}}">{{type.name}}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Personne de Contact <sup class="text-danger">*</sup></label>
+                <input type="text" class="form-control" ng-model="newPart.contactPerson" required>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Téléphone Fix</label>
+                <input type="text" class="form-control" ng-model="newPart.phone">
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Email <sup class="text-danger">*</sup></label>
+                <input type="email" class="form-control" ng-model="newPart.email" required>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="pre-label">Société <sup class="text-danger">*</sup></label>
+                <input type="text" class="form-control" ng-model="newPart.company" required>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Téléphone Portable </label>
+                <input type="text" class="form-control" ng-model="newPart.cellphone">
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Adresse </label>
+                <textarea class="form-control" ng-model="newPart.address"></textarea>
+            </div>
+
+
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal(); createParticipant()" class="btn btn-primary"
+                ng-disabled="addParticipantForm.$invalid || isCreatingNewParticipant">
+            <i class="fa" ng-class="{'fa-plus': !isCreatingNewParticipant, 'fa-circle-o-notch fa-spin': isCreatingNewParticipant}"></i>
+            Ajouter l'intervenant</button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+<script type="text/ng-template " id="updateParticipantModal">
+    <h2>Modification d'un intervenant:</h2>
+    <form class="col-md-12" name="updateParticipantForm">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="pre-label">Qualité de l'intervenant <sup class="text-danger">*</sup></label>
+                <select ui-select2 ng-model="currentPart.type.id" required>
+                    <option ng-repeat="type in allTypes" value="{{type.id}}">{{type.name}}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Personne de Contact <sup class="text-danger">*</sup></label>
+                <input type="text" class="form-control" ng-model="currentPart.contactPerson" required>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Téléphone Fix</label>
+                <input type="text" class="form-control" ng-model="currentPart.phone">
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Email <sup class="text-danger">*</sup></label>
+                <input type="email" class="form-control" ng-model="currentPart.email" required>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="pre-label">Société <sup class="text-danger">*</sup></label>
+                <input type="text" class="form-control" ng-model="currentPart.company" required>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Téléphone Portable</label>
+                <input type="text" class="form-control" ng-model="currentPart.cellphone">
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Adresse</label>
+                <textarea class="form-control" ng-model="currentPart.address"></textarea>
+            </div>
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal(); updateParticipant()" class="btn btn-primary"
+                ng-disabled="updateParticipantForm.$invalid || isUpdatingParticipant">
+            <i class="fa" ng-class="{'fa-edit': !isUpdatingParticipant, 'fa-circle-o-notch fa-spin': isUpdatingParticipant}"></i>
+            Modifier l'intervenant</button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+<script type="text/ng-template" id="deleteParticipantModal">
+    <div class="ngdialog-message">
+        <h2>Voulez-vous vraiment supprimer cet intervenant ?</h2>
+    </div>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal();deleteParticipant($parent.currentParticipantId)" class="btn btn-primary">Confirmer</button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>

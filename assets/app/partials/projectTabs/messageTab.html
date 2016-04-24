@@ -1,0 +1,140 @@
+<div class="box border no-top col-md-12">
+    <div class="box-body col-md-12">
+        <h1>Echanges sur le projet : {{project.name}}</h1>
+
+                <button type="button" class="btn btn-primary" ng-click="openMessageDialog();">
+                    <i class="fa fa-envelope"></i>
+                    Nouveau
+                </button>
+
+        <div class="panel panel-default md-panel" ng-repeat=" msg in messages">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-4 md-span">
+                        <span class="msg-sender">Rédigé par : {{msg.sender.name}}</span>
+                    </div>
+                    <div class="col-xs-4 md-span">
+                        <span class="msg-subject">{{msg.subject}}</span>
+                    </div>
+                    <div class="col-xs-4 md-span">
+                        <span class="msg-date">{{msg.createdAt| date:'dd/MM/yyyy'}}</span>
+                        <span ng-click="openDeleteMessage(msg)" class="btn btn-danger btn-xs delete"><i class="fa fa-times"></i></span>
+                        <span ng-click="openEditMessage(msg)" class="btn btn-default btn-xs modify"><i class="fa fa-pencil"></i></span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="panel-body">
+
+                <p ng-bind-html="msg.content"></p>
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-sm-4 col-md-2" ng-repeat="att in msg.attachment">
+                        <div class="attachment-file">
+                            <div class="thumbnail" ng-click="viewAttachedFile(att);">
+                                <file-type-Bis type="{{att.type}}" src="{{att.webPath}}"></file-type-Bis>
+                                <div class="caption">
+                                    <a href="" ng-click="viewAttachedFile(att);">
+                                        <span class="glyphicon glyphicon-save" aria-hidden="true"/> {{att.name | truncate :20:'...'}}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div ng-hide="messages.length>0" class="no-project">
+            <h4> Aucun message à afficher</h4>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template " id="messageDialog">
+    <h2>Envoyer un message </h2>
+    <form class="col-md-12" name="sendMessage">
+
+        <div class="form-group col-md-12">
+            <label>
+                Nom du projet:
+            </label>
+            <label>{{project.name}}</label>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="col-sm-2 control-label" for="recipients">À
+            </label>
+            <div class="col-sm-10">
+                <select id="recipients" multiple ui-select2 ng-model="$parent.selectedRecipients">
+                    <option ng-repeat="recipient in personTosend" value="{{recipient.email}}">
+                        {{recipient.name}} <{{recipient.email}}>
+                    </option>
+                </select>
+             </div>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="col-sm-2 control-label" for="subject">Sujet * </label>
+            <div class="col-sm-10">
+                <input id="subject" type="text" class="form-control" ng-model="$parent.emailSubject" required>
+            </div>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="col-sm-2 control-label">Contenu de l'email *
+            </label>
+            <div class="col-sm-10">
+                <text-angular ng-model="$parent.emailBody" required
+                              ta-toolbar="[['h1','h2','h3','h4','p','pre','quote'],['bold','italics','underline','strikeThrough'],['ul','ol','justifyLeft','justifyCenter','justifyRight','indent','outdent'],['undo','redo']]"
+                        ></text-angular>
+            </div>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="col-sm-2 control-label">Attachments </label>
+
+            <div>
+                <button ng-file-select="upload(files)" multiple ng-model="$parent.files " class="btn btn-primary">Parcourir...</button>
+                <div ng-show="files">
+                    <div class="file-container dialog-upload-container" ng-repeat="f in files">
+                        <div class="thumbnail file col-md-2">
+                            <file-icon type="{{f.type}}"></file-icon>
+                            <span ng-click="deleteAttachedFile(f)" class="delete"><i class="fa fa-times fa-2x"></i></span>
+                        </div>
+                        <span class="title">{{f.name}} - {{f.size|FileSize}}</span>
+                        <progressbar ng-show="progressPercentage >= 0" animate="true" value="progressPercentage"
+                                     type="success">{{progressPercentage}}%
+                        </progressbar>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="send()" class="btn btn-primary" ng-disabled="sendMessage.$invalid"><i
+                class="fa fa-paper-plane"></i> Envoyer
+        </button>
+    </div>
+</script>
+<script type="text/ng-template" id="deleteMessageModal">
+    <div class="ngdialog-message">
+        <h2>Voulez-vous vraiment supprimer ce message ?</h2>
+    </div>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeAndClearModal();deleteMessage()" class="btn btn-primary">Confirmer
+        </button>
+        <button ng-click="closeAndClearModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+<div ng-show="isPopUpOpen" class="no-top col-md-6 file-pop-up">
+    <a ng-click="closePopUp()" class="file-pop-up-close">
+        <i class="fa fa-2x fa-times"></i>
+    </a>
+    <div class="image-container" ng-if="currentMedia.type.indexOf('image') > -1">
+        <img class="pic" ng-src="{{currentMedia.webPath}}" ng-show="isPopUpOpen"/>
+    </div>
+    <div class="video-container" ng-if="currentMedia.type.indexOf('video') > -1">
+        <video class="video" controls autoplay>
+            <source src="{{currentMedia.webPath}}"  type="video/mp4">
+        </video>
+    </div>
+</div>

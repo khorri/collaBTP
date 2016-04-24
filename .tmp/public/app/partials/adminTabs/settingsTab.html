@@ -1,0 +1,71 @@
+<div class="box border no-top col-md-12" ng-controller="configCtrl">
+    <div class="box-body col-md-12">
+        <h1>Configuration</h1>
+
+        <div class="actions-btn">
+            <button ng-click="saveConfig();" class="btn btn btn-success" ng-disabled="configForm.$invalid">
+                <i class="fa fa-save"></i> Enregistrer
+            </button>
+        </div>
+        <form name="configForm" id="configForm">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <div class="company-logo" align="center"><img ng-show="!isEditingImage"
+                                                                  src="{{logoPath}}"
+                                                                  class="img-thumbnail" width="300px"
+                                                                  height="auto"/>
+
+                        <div ng-show="isEditingImage" ng-file-select="upload(files)" ng-file-drop ng-model="$parent.files" ng-model-rejected="rejFiles"
+                             ng-multiple="false" ng-accept="accept" accept="images/*"
+                             ng-disabled="disabled"
+                             drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}"
+                             allow-dir="allowDir" class="logo-upload-area drop-box" drop-available="dropAvailable">
+                            Sélectioner ou <span ng-show="dropAvailable">glisser-déposer</span> une image</div>
+                        <button type="button" ng-show="!isEditingImage" class="btn btn-default btn-edit-left"
+                                ng-click="isEditingImage = true"><i class="fa fa-pencil"></i>
+                        </button>
+                        <button type="button" ng-show="isEditingImage" class="btn btn-default"
+                                ng-click="isEditingImage = false"><i class="fa fa-times"></i> Annuler
+                        </button>
+                        <button type="button" ng-show="!isEditingImage" class="btn btn-danger btn-del-left"><i class="fa fa-trash"></i> </button>
+                    </div>
+                    <div ng-show="files.length> 0">
+
+                        <div class="file-container dialog-upload-container" ng-repeat="f in files">
+                            <progressbar ng-show="progressPercentage >= 0" animate="true" value="progressPercentage"
+                                         type="success">{{progressPercentage}}%
+                            </progressbar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="pre-label">Raison Sociale <sup class="text-danger">*</sup></label>
+                    <input type="text" ng-model="config.companyName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="pre-label">Email <sup class="text-danger">*</sup></label>
+                    <input type="email" ng-model="config.email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="pre-label">Téléphone 1</label>
+                    <input type="text" ng-model="config.phone1" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="pre-label">Téléphone 2</label>
+                    <input type="text" ng-model="config.phone2" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="pre-label">Fax</label>
+                    <input type="text" ng-model="config.fax" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="pre-label">Adresse <sup class="text-danger">*</sup></label>
+                        <textarea class="form-control" ng-model="config.address" name="config.address"
+                                  required></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

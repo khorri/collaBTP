@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AN name="AFALLAH EL BACHIR,CHIHABI KAMAL,BENSALAH MOUNIR" type="AN">
+   
+		<BU name="AFALLAH EL BACHIR" type="BU" bu="BU1">
+				<GAMME name="RHUMATO" type="REASEAU">
+					<DR name="DR AFALLAH EL BACHIR" type="DR">
+						<VM name="BOUMLIK ADIL" type="VM" />
+						<VM name="CHBIHI ASMAE" type="VM" />
+						<VM name="DAKIR NISRINE" type="VM" />
+						<VM name="EL FOUTOUHAT YOUSSEF" type="VM" />
+						<VM name="EL IDRISSI JAMAL" type="VM" />
+						<VM name="ELOUADEH GHIZLANE" type="VM" />
+						<VM name="GRIFI ZOUBIDA" type="VM" />
+						<VM name="IDHAMMOU HICHAM" type="VM" />
+						<VM name="LAHLOU AMINE YOUNES" type="VM" />
+						<VM name="LOUKILI MOHAMMED" type="VM" />
+						<VM name="MOUZOUN KAOUTAR" type="VM" />
+						<VM name="RIYECHE MERIEM" type="VM" />
+						<VM name="EL_AIDI BADR" type="VM" />
+						<VM name="HAYANI ILHAM" type="VM" />
+					</DR>
+				</GAMME>	
+			</BU>
+			
+		<BU name="AHRAZEM TAWFIK" type="BU" bu="BU1">
+				<GAMME name="SNC" type="REASEAU">
+					<DR name="DR AHRAZEM TAWFIK" type="DR">
+						<VM name="BOUTALEB CHAKIB" type="VM" />
+						<VM name="EL JAOUI HANANE" type="VM" />
+						<VM name="GHILAL LHOSSAINE" type="VM" />
+						<VM name="HAKKOU MOHAMMED" type="VM" />
+						<VM name="KHALLOUKI MOHAMED AMINE" type="VM" />
+						<VM name="OMARI AYOUB" type="VM" />
+						<VM name="OUAZZANI LALLA KAWTAR" type="VM" />
+						<VM name="RAHOUI KAMAL" type="VM" />
+						<VM name="RIZK MOHAMMED" type="VM" />
+						<VM name="TAIFOUR HAJAR" type="VM" />
+						<VM name="TAJMOUATI MOHAMED AMINE" type="VM" />
+						<VM name="YAZGHICH ADIL" type="VM" />
+					</DR>
+				</GAMME>
+	    </BU>
+	
+	   <BU name="CHIHABI KAMAL" type="BU" bu="BU1">
+				<GAMME name="PHARMA" type="REASEAU">
+					<DR name="NABIL FATIMA ZAHRA" type="DR">
+					   <VM name="BACHEIKH JAMAL" type="VM" />
+					    <VM name="LAFANI AYOUB" type="VM" />
+						<VM name="LYANBOUI MOHAMMED AMINE" type="VM" />
+						<VM name="MZOUDI TOUFIK" type="VM" />
+					</DR>
+				</GAMME>	
+				
+				<GAMME name="HEMATO/SOBI" type="REASEAU">
+					<DR name="OBID MOUNIA" type="DR">
+						<VM name="AKKARI NOUREDDINE" type="VM" />
+						<VM name="BENMOUSSA HANANE" type="VM" />
+					</DR>
+				</GAMME>			
+	    </BU>
+
+	   <BU name="OUAYAD ABDELLATIF" type="BU" bu="BU1">
+			<GAMME name="MG1" type="REASEAU">
+				<DR name="DR EL_MAKHLOUFI BRAHIM" type="DR">
+					<VM name="ABDELHAQ JIHANE" type="VM" />
+					<VM name="AMARAT YASSINE" type="VM" />
+					<VM name="BOUHKIA NADIA" type="VM" />
+					<VM name="CHAKIR ABDELATIF" type="VM" />
+					<VM name="EL_HAMRY AMINA" type="VM" />
+					<VM name="NVM CASABLANCA NVM MG I" type="VM" />
+					<VM name="RHAYHA BOUCHRA" type="VM" />
+				</DR>
+				<DR name="DR BERKANI ADIL" type="DR">
+					<VM name="ANOUAR SIHAME" type="VM" />
+					<VM name="BADOUR BRIK" type="VM" />
+					<VM name="BOUZGARN ABDELFETTAH" type="VM" />
+					<VM name="EL BAKMI HAMID" type="VM" />
+					<VM name="EL HOUDI SOUFIANE" type="VM" />
+					<VM name="EL_YASSIR BOUCHRA" type="VM" />
+					
+				</DR>
+				<DR name="EL YOUBI EL IDRISSI BADR" type="DR">
+					<VM name="ALAMI GHITA" type="VM" />
+					<VM name="BOUQSIB REDOUAN" type="VM" />
+					<VM name="EL BANOUHI YASSINE" type="VM" />
+					<VM name="ELAOUNI MOUNIA" type="VM" />
+					<VM name="OUBERRI TARIK" type="VM" />
+					<VM name="ZOUITINI OUISSAM" type="VM" />
+				</DR>
+				<DR name="LOUTFI MOHAMED" type="DR">
+					<VM name="AIT AISSA SAFAE" type="VM" />
+					<VM name="ELJAOUHARI  HICHAM" type="VM" />
+					<VM name="ESSAIBARI OUIDAD" type="VM" />
+					<VM name="GUEROUANI NABIL" type="VM" />
+					<VM name="NVM 1 TANGER NVM MG I" type="VM" />
+					<VM name="REMMAL GHITA" type="VM" />
+				</DR>
+			</GAMME>
+			<GAMME name="MG2" type="REASEAU">
+				<DR name="DR BERKANI ADIL" type="DR">
+					<VM name="MOHAMMADI ALI" type="VM" />
+					<VM name="NVM AGADIR NVM MG II" type="VM" />
+					<VM name="OUBAADI YOUSSEF" type="VM" />
+					<VM name="WAKRIM HIND" type="VM" />
+				</DR>
+				<DR name="DR EL_MAKHLOUFI BRAHIM" type="DR">
+					<VM name="BELAASSRI ZINEB" type="VM" />
+					<VM name="EDDARKAOUI SABRINE" type="VM" />
+					<VM name="FATHI LAILA" type="VM" />
+					<VM name="JADYANI AZIZ" type="VM" />
+					<VM name="NADIR ABDELAZIZ" type="VM" />
+					<VM name="NVM CASA MG 2" type="VM" />
+				</DR>			
+				<DR name="EL YOUBI EL IDRISSI BADR" type="DR">
+					<VM name="ABOU-HAFS ZOHAIR" type="VM" />
+					<VM name="BENSLIMANE LOUBNA" type="VM" />
+					<VM name="NVM OUJDA NVM MG II" type="VM" />
+				</DR>
+				
+				<DR name="LOUTFI MOHAMED" type="DR">
+					<VM name="BOUGUARMAH BADR" type="VM" />
+					<VM name="CHAHYD SANAE" type="VM" />
+					<VM name="EL AIMANI BADR" type="VM" />
+					<VM name="EL ALLAM AIDA" type="VM" />
+					<VM name="ROCHDI AHLAM" type="VM" />
+				</DR>
+				
+			</GAMME>
+		</BU>	
+	
+	
+	<BU name="OUFNINE KARIMA" type="BU" bu="BU1">
+        <GAMME name="CARDIO I" type="REASEAU">
+            <DR name="DR EL_BOURI AHMED" type="DR">
+                <VM name="AHARCHI MOHAMMED" type="VM" />
+				<VM name="BELHOUSSEIN NADIA" type="VM" />
+				<VM name="BRIK ADIL" type="VM" />
+				<VM name="EL AZZOUZI AHLAM" type="VM" />
+				<VM name="EL HASSOUNI MOHAMED AMINE" type="VM" />
+				<VM name="FENNANE KARIMA" type="VM" />
+				<VM name="LAKHLOUFI HICHAM" type="VM" />
+				<VM name="TIMOUR WIAME" type="VM" />
+            </DR>
+			
+			<DR name="DR BENSLIMAN AZIZ" type="DR">
+                <VM name="AABYDI AISSAM" type="VM" />
+				<VM name="AIT_BOUSHIT SAIDA" type="VM" />
+				<VM name="AIT CHEIKH OTHMAN" type="VM" />
+				<VM name="KHANOUCHI YASSINE" type="VM" />
+            </DR>
+			<DR name="DR CHEBKI SIHAM" type="DR">
+                <VM name="AZZOUM LAHCEN" type="VM" />
+				<VM name="BERRADA SALOUA" type="VM" />
+				<VM name="NVM 2 CASABLANCA NVM CARDIO I" type="VM" />
+				<VM name="RIZK OUSSAMA" type="VM" />
+				<VM name="STOUK YOUNES" type="VM" />
+            </DR>
+			
+			
+        </GAMME>
+
+        <GAMME name="CARDIO II" type="REASEAU">
+            <DR name="DR EL_BOURI AHMED" type="DR">
+                <VM name="EL FADILI YASSIR" type="VM" />
+				<VM name="ELKHIARI SIHAM" type="VM" />
+				<VM name="AABASLAMA BADRE EDDINE" type="VM" />
+				<VM name="BOUCHIBA OUMAIMA" type="VM" />
+				<VM name="EL AZAAR MOHAAMMED" type="VM" />
+				<VM name="NVM OUJDA NVM CARDIO II" type="VM" />
+				<VM name="CHRIYAA MOHAMED" type="VM" />
+				<VM name="RHOULAM WADII" type="VM" />
+            </DR>
+			
+			<DR name="DR BENSLIMAN AZIZ" type="DR">
+                <VM name="KASMAOUI NADIA" type="VM" />
+				<VM name="NAJEMEDINE AISSAM" type="VM" />
+				<VM name="ZOUHAL SI MOHAMMED" type="VM" />
+            </DR>
+			
+			<DR name="DR CHEBKI SIHAM" type="DR">
+                <VM name="ACHRAK MOUAD" type="VM" />
+				<VM name="LAGHSSEN Redouane" type="VM" />
+				<VM name="MADHOUB SIHAM" type="VM" />
+				<VM name="MHADI ZOUHAIR" type="VM" />
+				<VM name="NVM CASABLANCA NVM CARDIO II" type="VM" />
+            </DR>
+        </GAMME>		
+		
+	</BU>
+	
+	
+</AN>

@@ -1,0 +1,97 @@
+<div class="box border no-top col-md-12">
+    <div class="box-body col-md-12">
+        <h1>Types des clients et intervenants</h1>
+        <button ng-click="openAddTypeModal()" class="btn btn btn-primary">
+            <i class="fa fa-plus"></i> Nouveau
+        </button>
+        <!-- Types DATATABLE -->
+        <table st-table="displayedCollection" st-safe-src="allTypes" class="table table-striped">
+            <thead>
+            <tr>
+                <th colspan="10">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1"><i class="fa fa-search"></i></span>
+                        <input st-search="" st-delay="100" class="form-control" placeholder="Recherche globale" type="text" />
+                    </div>
+                </th>
+            </tr>
+                <tr>
+                    <th>#</th>
+                    <th>Titre</th>
+                    <th>Description</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="type in allTypes track by $index">
+                    <td>{{ $index + 1}}</td>
+                    <td>{{ type.name }}</td>
+                    <td>{{ type.description }}</td>
+                    <td>
+                        <button ng-click="openUpdateTypeModal(type)" class="show-btn btn btn-primary">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        <button ng-click="openDeleteTypeModal(type.id)" class="show-btn btn btn-danger">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!--Type Modal-->
+<script type="text/ng-template " id="addTypeModal">
+    <h2>Nouveau type:</h2>
+    <form class="col-md-12" name="addTypeForm">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="pre-label">Titre <sup class="text-danger">*</sup></label>
+                <input class="form-control" type="text" ng-model="newType.name" required/>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Description</label>
+                <textarea class="form-control" ng-model="newType.description" ></textarea>
+            </div>
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal(); createType(newType)" class="btn btn-primary"
+                ng-disabled="addTypeForm.$invalid || isCreatingNewType">
+            <i class="fa" ng-class="{'fa-plus': !isCreatingNewType, 'fa-circle-o-notch fa-spin': isCreatingNewType}"></i>
+            Ajouter</button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+<script type="text/ng-template " id="updateTypeModal">
+    <h2>Modification d'un type:</h2>
+    <form class="col-md-12" name="updateTypeForm">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="pre-label">Titre <sup class="text-danger">*</sup></label>
+                <input class="form-control" type="text" ng-model="currentType.name" required/>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Description</label>
+                <textarea class="form-control" ng-model="currentType.description" ></textarea>
+            </div>
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal(); updateType(currentType)" class="btn btn-primary"
+                ng-disabled="updateTypeForm.$invalid || isUpdatingType">
+            <i class="fa" ng-class="{'fa-edit': !isUpdatingType, 'fa-circle-o-notch fa-spin': isUpdatingType}"></i>
+            Modifier</button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+<script type="text/ng-template" id="deleteTypeModal">
+    <div class="ngdialog-message">
+        <h2>Voulez-vous vraiment supprimer ce type ?</h2>
+    </div>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal();deleteType($parent.currentTypeId)" class="btn btn-primary">Confirmer</button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>

@@ -1,0 +1,46 @@
+<div class="box border no-top col-md-12">
+	<div class="box-body col-md-12">
+		<h1>Liste de factures</h1>
+		<div class="actions-btn">
+			<a ui-sref="project.missions.facturation({sId: subProject.id})" class="btn btn btn-default">
+				<i class="fa fa-reply"></i> Retour
+			</a>
+		</div>
+		<table st-table="displayedCollection" st-safe-src="bills" class="table table-striped">
+			<thead>
+				<tr>
+					<th></th>
+					<th>ID</th>
+					<th>Montant</th>
+					<th>Statut de payement</th>
+					<th st-sort="isObsolete" st-sort-default="default">Status de la facture</th>
+					<th>Date</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="bill in displayedCollection track by $index">
+					<td cs-select="bill"></td>
+					<td>{{bill.title}}</td>
+					<td>
+						{{bill.amount | currency:''}} DH
+					</td>
+					<td>
+						<span ng-if="!bill.isPaid" class="label label-danger">Non payée</span>
+						<span ng-if="bill.isPaid" class="label label-success">Payée </span>
+					</td>
+					<td>
+						<span ng-if="bill.isObsolete" class="label label-danger">Obsolète</span>
+						<span ng-if="!bill.isObsolete" class="label label-success">Valide </span>
+					</td>
+					<td>{{bill.createdAt | date:'dd/MM/yyyy'}}</td>
+					<td>
+						<a ng-disabled="!bill.invoice" href="{{bill.invoice.webPath}}" target="_blank" class="show-btn btn btn-default">
+							<i class="fa fa-list-alt"></i>
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

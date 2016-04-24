@@ -1,0 +1,491 @@
+<!doctype html>
+
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Contrat - RCMAROC</title>
+
+    <style>
+        body {
+            background: white;
+            line-height: .6cm;
+        }
+
+        page[size="A4"] {
+            position: relative;
+            background: white;
+            width: 210mm;
+            height: 284.7mm;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border: solid 1px transparent;
+        }
+
+        .page-content {
+            background: white;
+            height: 100%;
+            width: 210mm;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .new-page {
+            page-break-after: always !important;
+        }
+
+        .last-page {
+            page-break-after: avoid !important;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            border-top: 2px solid #000;
+            text-align: right;
+            height: 1cm;
+        }
+
+        .header {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            border-top: 2px solid #000;
+            text-align: right;
+            margin-bottom: 30px;
+        }
+
+        .col-md-4 {
+            width: 33.33333333%;
+            float: left;
+        }
+
+        .text-left {
+            text-align: left !important;
+        }
+
+        .text-right {
+            text-align: right !important;
+        }
+
+        .first-page {
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .project-info {
+            text-align: center;
+            border: 2px solid #000;
+            padding: 30px;
+            width: 80%;
+            display: block;
+            margin-right: auto;
+            margin-left: auto;
+            font-size: 20px;
+            margin-bottom: 40px;
+            background-color: #DDDDDD;
+            border-radius: 3px;
+        }
+
+        .article-info {
+            color: #373737;
+            font-size: 14px;
+            text-decoration: underline;
+            background-color: #ddd;
+            padding: 5px;
+            border-radius: 3px;
+            border: 1px solid #BEBEBE;
+        }
+
+        .div-title {
+            margin-bottom: 10px;
+            font-size: 16px;
+            text-decoration: underline;
+            margin-left: -15px;
+        }
+
+        .div-titl {
+            margin-bottom: 10px;
+            font-size: 16px;
+            text-decoration: underline;
+        }
+    </style>
+
+</head>
+<body>
+<div id="pageHeader" class="header">
+    <div class="col-md-4 text-left">RISK CONTROL</div>
+    <div class="col-md-4" align="center">CONTROLE TECHNIQUE</div>
+    <div class="col-md-4 text-right">Convention n°<strong>{{projectRef}}</strong>
+    </div>
+</div>
+<div class="page-content new-page">
+    </br>
+    <p align="center"><img src="http://www.rcomaroc.com/wp-content/uploads/2014/12/LOGO12.jpg" width="150px">
+
+    </p>
+
+    <p align="center" style="font-size:24px"><strong>{{ourCompany}}</strong>
+
+    </p>
+
+    </br>
+
+    <p align="center" style="font-size:20px"><strong>CONTRAT DE CONTROLE TECHNIQUE</strong>
+
+    </p>
+
+    </br>
+
+    <div class="project-info">
+
+        <strong>{{projectName}} </br> {{projectAddress}}, {{uppercase city}}</strong>
+
+    </div>
+
+    </br>
+
+    </br>
+
+    <div class="first-page">
+
+        <div>
+
+            <label><strong>ENTRE</strong>
+
+            </label>
+
+            <label><strong>{{customer}}</strong>
+            </label>
+
+            <div>
+                <label>{{customerAddress}}</label>
+            </div>
+
+        </div>
+        </br>
+        <div>
+
+            <label><strong>AGISSANT EN QUALITÉ DE</strong>
+
+            </label>
+
+            <label><strong>{{customerType}}</strong>
+
+            </label>
+
+        </div>
+        </br>
+        <div>
+
+            <label><strong>ET {{ourCompany}}</strong>
+
+            </label>
+
+        </div>
+        <div>
+
+            <label>{{ourCompanyAddress}}</label>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="page-content">
+    <p class="article-info" style="text-align:center;"><strong>CONDITIONS PARTICULIERES DE LA CONVENTION</strong>
+    </p>
+
+    <p class="article-info"><strong>ARTICLE 1 - PIECES CONSTITUTIVES DE LA CONVENTION</strong>
+    </p>
+
+    <p>Les pièces contractuelles qui constituent la présente convention de contrôle technique sont par ordre de
+        priorité décroissante:</p>
+
+    <p>
+        <strong>Les présentes Conditions Particulières</strong>
+    </p>
+    <ul>
+        {{#if missionGO}}
+        <li>Mission L : relative à la solidité des ouvrages.</li>
+        {{/if}} {{#if missionPELEC}}
+        <li>Mission ELEC : relative à l’électricité des bâtiments.</li>
+        <li>Mission PLOMB : relative à la plomberie des bâtiments.</li>
+        {{/if}} {{#if missionETANCH}}
+        <li>Mission E : Etanchéité des terrasses.</li>
+        {{/if}}
+    </ul>
+    <p class="article-info"><strong>ARTICLE 2 - OPERATION SOUMISE AU CONTROLE</strong>
+    </p>
+
+    <p><strong>{{ourCompany}}</strong> interviendra dans le cadre de la présente convention sur le programme de
+        <strong>{{projectName}}</strong>,</p>
+
+    <p>Sise à : <strong>{{projectAddress}}, {{uppercase city}}</strong>
+    </p>
+
+    <p>Les dispositions de la présente convention prendront effet dès sa signature.</p>
+
+    <p class="article-info"><strong>ARTICLE 3 - OBJET DE LA MISSION</strong>
+    </p>
+
+    <p>Le contrôle technique de <strong>{{ourCompany}}</strong> portera sur :</p>
+    <ul>
+        {{#if missionGO}}
+        <div class="div-title"><strong>Mission L : relative à la solidité des ouvrages</strong>
+        </div>
+        <li>La Normalisation des risques de désordres matériels affectant la solidité des ouvrages et susceptibles
+            de mettre en cause la responsabilité des constructeurs. (Article 769 du Dahir du 12 Août 1913, modifié
+            par le Dahir du 8 Décembre 1959).
+        </li>
+        <li>Etablissement du rapport de sécurité incendie.</li>
+        <li>La Normalisation des risques de désordres pouvant affecter les ouvrages visés à l’article 4 ci-après
+            dans le cadre de la mission L
+        </li>
+        <li>Contrôle et suivi des travaux de gros œuvre.</li>
+        <li>Le contrôle technique de {{ourCompany}} porte sur la tenue des bâtiments au séisme par référence aux
+            règles parasismiques RPS 2000.
+        </li>
+        {{/if}} {{#if missionPELEC}}
+        <div class="div-title"><strong>Mission ELEC : relative au lot d’électricité</strong>
+        </div>
+        <li>Contrôle des travaux d’électricité selon les normes et les DTU.</li>
+        <div class="div-title"><strong>Mission PLOMB : relative au lot de plomberie</strong>
+        </div>
+        <li>Contrôle des travaux de plomberie selon les normes et les DTU.</li>
+        {{/if}} {{#if missionETANCH}}
+        <div class="div-title"><strong>Mission E : Etanchéité des terrasses</strong>
+        </div>
+        <li>Contrôle des travaux d’étanchéité selon les normes et les DTU.</li>
+        {{/if}}
+    </ul>
+</div>
+
+<div class="page-content">
+    <p class="article-info"><strong>ARTICLE 4 - CONDITIONS D’INTERVENTION</strong>
+    </p>
+
+    <p>Dans la limite de la mission définie à l’article 3 ci-dessus, <strong>{{ourCompany}}</strong> exercera son
+        contrôle technique sur les ouvrages soumis à son contrôle, à l’exclusion des ouvrages avoisinants, des
+        travaux préparatoires (tels que terrassements, blindages, coffrages, étaiements, levages, manutentions)
+        ainsi que des travaux d’aménagements extérieurs aux bâtiments (tels que voirie, espaces verts, canalisations
+        de toutes sortes).</p>
+
+    <p>A l’initiative du Maître d’ouvrage, les missions de <strong>{{ourCompany}}</strong> seront de type</p>
+
+    <p><strong>
+        <ul>
+            {{#if missionGO}}
+            <li>Mission L : relative à la solidité des ouvrages.</li>
+            {{/if}} {{#if missionPELEC}}
+            <li>Mission ELEC : relative à l’électricité des bâtiments.</li>
+            <li>Mission PLOMB : relative à la plomberie des bâtiments.</li>
+            {{/if}} {{#if missionETANCH}}
+            <li>Mission E : Etanchéité des terrasses.</li>
+            {{/if}}r
+
+        </ul>
+    </strong>
+    </p>
+    <p>Et comportera les prestations suivantes :</p>
+
+    <p style="text-decoration:underline;">
+        {{#if missionGO}}
+
+    <div class="div-titl"><strong>Mission L : relative à la solidité des ouvrages</strong>
+    </div>
+    <strong>Phase études :</strong>
+
+    <p>- La vérification des documents techniques nécessaires à la réalisation du projet qui fera l’objet
+        d’approbation ou de réserves.</p>
+
+    <p>Le phasage projeté se présente comme suit :</p>
+    <ul>
+
+        <li>Avis et interprétation du rapport de sol.</li>
+        <li>Avis et approbation des principes de construction proposés et finalisés avec le ou les BET.</li>
+        <li>Vérification des plans d’exécution à établir sur la base des données et principes de construction
+            validés au préalable. Pour ce faire, le ou les BET devront fournir à la demande de RISK CONTROL les
+            notes, fichiers de calculs et de dimensionnement des ouvrages.
+        </li>
+    </ul>
+    <strong>Phase travaux :</strong>
+
+    <ul>
+
+        <li>Le contrôle technique de l’exécution effectué par examen visuel à l’occasion de visites ponctuelles
+            réparties sur la durée de réalisation des ouvrages de contrôle ne revêt aucun caractère exhaustif.
+        </li>
+        <li>Interprétation des résultats des essais d’écrasement du béton.</li>
+        <li>Examen des plans de pose et approbation.</li>
+        <li>Fournir des rapports de visite de chantier</li>
+    </ul>
+    {{/if}} {{#if missionETANCH}}
+    <div class="div-titl"><strong>Mission E : Etanchéité des terrasses</strong>
+    </div>
+    <strong>Phase études :</strong>
+
+    <p>- La vérification des documents techniques nécessaires à la réalisation du projet qui fera l’objet
+        d’approbation ou de réserves.</p>
+
+    <p>Le phasage projeté se présente comme suit :</p>
+    <ul>
+
+        <li>Avis sur le complexe d’étanchéité.</li>
+        <li>Avis sur les plans d’exécution des travaux d’étanchéité.</li>
+    </ul>
+    {{/if}}
+</div>
+
+
+<div class="page-content">
+    {{#if missionETANCH}}
+    <strong>Phase travaux :</strong>
+
+    <ul>
+
+        <li>Le contrôle des travaux d’étanchéité.</li>
+        <li>Assistance aux essais mise en eau.</li>
+        <li>Fournir des rapports de visite de chantier</li>
+
+    </ul>
+    {{/if}} {{#if missionPELEC}}
+    <div class="div-titl"><strong> Mission ELEC & PLOMB : relative au lot d’électricité & plomberie</strong>
+    </div>
+    <strong>Phase études :</strong>
+
+    <p>- La vérification des documents techniques nécessaires à la réalisation du projet qui fera l’objet
+        d’approbation ou de réserves.</p>
+
+    <p>Le phasage projeté se présente comme suit :</p>
+    <ul>
+        <li>Vérification des plans d’exécution. Pour ce faire, le ou les BET devront fournir à la demande de RISK
+            CONTROL les notes, fichiers de calculs et de dimensionnement des ouvrages
+        </li>
+    </ul>
+    <strong>Phase travaux :</strong>
+
+    <ul>
+
+        <li>Le contrôle des travaux d’électricité & plomberie.</li>
+        <li>Assistance aux différents essais.</li>
+        <li>Fournir des rapports de visite de chantier.</li>
+    </ul>
+    {{/if}}
+    </br>
+    <p class="article-info"><strong>ARTICLE 5</strong>
+    </p>
+
+    <p><strong>{{ourCompany}}</strong> agit à titre de Bureau de Contrôle, elle ne joue le rôle ni d'architecte, ni
+        d'entrepreneur, ni de constructeur, ni d'ingénieur-conseil, à quelque titre que ce soit ; elle ne saurait,
+        de ce fait, en aucun cas, assumer les responsabilités afférentes à ces professions.</p>
+
+    <p>Ses interventions ne comportent :</p>
+
+    <p>a) ni l'établissement de projets ou de plans d'exécution ;</p>
+
+    <p>b) ni l'obligation d'aucune permanence ou venue régulière de ses Ingénieurs et Techniciens sur les chantiers
+        ou autres lieux d'intervention;</p>
+
+    <p>c) ni aucune participation à la direction, à la surveillance des travaux, à leur coordination, à la
+        vérification des cotes, au métré des ouvrages ou à leur règlement, ou à l’implantation des bâtiments.</p>
+    </br>
+
+</div>
+
+
+<div class="page-content">
+    <p class="article-info"><strong>ARTICLE 6</strong>
+    </p>
+
+    <p>L'intervention de <strong>{{ourCompany}}</strong> a pour objet, d’une façon générale, de fournir aux
+        Assureurs les informations techniques nécessaires à l'appréciation du risque pris en charge au titre des
+        polices professionnelles de responsabilité décennale ; en conséquence, <strong>{{ourCompany}}</strong> ne
+        saurait en aucun cas être tenue pour responsable des vices, désordres et malfaçons susceptibles d'affecter
+        les ouvrages soumis à son contrôle, ni des dommages ou préjudices de toute nature relatifs auxdits ouvrages.
+    </p>
+    </br>
+    <p class="article-info"><strong>ARTICLE 7</strong>
+    </p>
+
+    <p>Le paiement des honoraires et frais est effectué au comptant et conformément aux modalités prévues dans la
+        convention.</p>
+
+    <p>L’obligation de payer les honoraires et frais revenant à <strong>{{ourCompany}}</strong> étant
+        inconditionnelle, le paiement ne peut en être différé en raison d’une divergence sur le point de vue
+        technique exprimé par <strong>{{ourCompany}}</strong> ou d’un différend entre le cocontractant et ses
+        maîtres d’œuvre, ingénieurs et entrepreneurs, ou entre deux ou plusieurs de ces personnes.</p>
+
+    <p>A défaut de règlement des notes d’honoraires et frais dans un délai d’un mois, ces derniers porteront intérêt
+        de plein droit et sans mise en demeure préalable au taux égal à une fois et demis le taux de l’intérêt
+        légal.</p>
+    </br>
+    <p class="article-info"><strong>ARTICLE 8</strong>
+    </p>
+
+    <p><strong>{{ourCompany}}</strong> peut suspendre ses opérations en cas de non paiement de ces honoraires échus.
+        Lorsqu’elle décide de suspendre ses opérations, <strong>{{ourCompany}}</strong> signifie sa décision au
+        cocontractant ou l’architecte par lettre recommandée ou un fax. Dans ce cas, il est dû à {{ourCompany}} la
+        quote-part des honoraires et frais prévus dans la convention, correspondant aux prestations déjà fournies.
+    </p>
+    </br>
+    <p class="article-info"><strong>ARTICLE 9</strong>
+    </p>
+
+    <p><strong>{{ourCompany}}</strong> peut résilier ce contrat en cas de non respect les règles de l’art de
+        construction, le contractant doit payer toutes les honoraires de RISK CONTROL.</p>
+    </br>
+</div>
+
+<div class="page-content last-page">
+    <p class="article-info"><strong>ARTICLE 10 – HONORAIRES DE RISK CONTROL</strong>
+    </p>
+
+    <p>Les honoraires et frais afférents à l'intervention de {{ourCompany}} sont fixés comme ce qui suit :</p>
+
+    <p><strong>{{budget}}</strong> DH HT</p>
+    </br>
+    <p class="article-info"><strong>ARTICLE 11 - VERSEMENT DES HONORAIRES</strong>
+    </p>
+
+    <p>Les honoraires et frais relatifs à l’intervention de <strong>{{ourCompany}}</strong> seront réglés comme suit
+        :</p>
+    <ul class="paymentMethods">
+        {{#paymentMethods}}
+        <li>{{percentage}} % {{label}}</li>
+        {{/paymentMethods}}
+    </ul>
+    <br>
+    <br>
+
+
+    <p>Fait à <strong>Casablanca</strong> le <strong>{{subProjectDate}}</strong> en 3 exemplaires</p>
+    </br>
+    <table width="900px;">
+        <tr>
+            <td align="left"><strong>{{ourCompany}}</strong>
+            </td>
+            <td align="left"><strong>{{customer}}</strong>
+            </td>
+            <td></td>
+        </tr>
+    </table>
+    INGENIEUR D’ETAT
+    <strong>NQAIRI REDOUANE</strong>
+</div>
+</body>
+</html>

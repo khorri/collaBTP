@@ -1,0 +1,116 @@
+<div class="box border no-top col-md-12">
+    <div class="box-body col-md-12">
+        <h1>Rôles et permissions</h1>
+        <button ng-click="openAddRoleModal()" class="btn btn btn-primary">
+            <i class="fa fa-plus"></i> Nouveau
+        </button>
+        <!-- Types DATATABLE -->
+        <table st-table="displayedCollection" st-safe-src="allRoles" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Titre</th>
+                    <th>Permissions</th>
+                    <th>Description</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="role in allRoles track by $index">
+                    <td>{{ $index + 1}}</td>
+                    <td>{{ role.title }}</td>
+                    <td><a ng-repeat="permission in role.permissions | orderBy:'title'">{{permission.title}} </a></td>
+                    <td>{{role.description}}</td>
+                    <td>
+                        <button ng-click="openUpdateRoleModal(role)" class="show-btn btn btn-primary">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        <button ng-click="openDeleteRoleModal(role.id)" class="show-btn btn btn-danger">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="10" class="text-center">
+                    <div st-pagination="" st-items-by-page="10" st-displayed-pages="10"></div>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<!--Role Modal-->
+<script type="text/ng-template " id="addRoleModal">
+    <h2>Nouveau rôle:</h2>
+    <form class="col-md-12" name="addRoleForm">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="pre-label">Titre <sup class="text-danger">*</sup></label>
+                <input class="form-control" type="text" ng-model="newRole.title" required/>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Description</label>
+                <textarea class="form-control" ng-model="newRole.description" ></textarea>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Permissions <sup class="text-danger">*</sup></label>
+                <ui-select notempty multiple theme="select2" ng-model="newRole.permissions" required>
+                    <ui-select-match placeholder="">{{$item.title}}</ui-select-match>
+                    <ui-select-choices repeat="permission in allPermissions | filter: $select.search">
+                        <span ng-bind-html="permission.title"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal(); createRole(newRole)" class="btn btn-primary"
+                ng-disabled="addRoleForm.$invalid || isCreatingNewRole">
+            <i class="fa" ng-class="{'fa-plus': !isCreatingNewRole, 'fa-circle-o-notch fa-spin': isCreatingNewRole}"></i>
+            Ajouter</button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+<script type="text/ng-template " id="updateRoleModal">
+    <h2>Modification d'un rôle:</h2>
+    <form class="col-md-12" name="updateRoleForm">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="pre-label">Titre <sup class="text-danger">*</sup></label>
+                <input class="form-control" type="text" ng-model="currentRole.title" required/>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Description</label>
+                <textarea class="form-control" ng-model="currentRole.description" ></textarea>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Permissions <sup class="text-danger">*</sup></label>
+                <ui-select notempty multiple theme="select2" ng-model="currentRole.permissions" required>
+                    <ui-select-match placeholder="">{{$item.title}}</ui-select-match>
+                    <ui-select-choices repeat="permission in allPermissions | filter: $select.search">
+                        <span ng-bind-html="permission.title"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal(); updateRole(currentRole)" class="btn btn-primary"
+                ng-disabled="updateRoleForm.$invalid || isUpdatingRole">
+            <i class="fa" ng-class="{'fa-edit': !isUpdatingRole, 'fa-circle-o-notch fa-spin': isUpdatingRole}"></i>
+            Modifier</button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+<script type="text/ng-template" id="deleteRoleModal">
+    <div class="ngdialog-message">
+        <h2>Voulez-vous vraiment supprimer ce rôle ?</h2>
+    </div>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal();deleteRole($parent.currentRoleId)" class="btn btn-primary">Confirmer</button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>

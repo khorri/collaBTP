@@ -1,0 +1,138 @@
+<div class="box border no-top col-md-12">
+    <div class="box-body col-md-12">
+        <h1>Fichiers attachés: <small>{{attachedFiles.length}}</small></h1>
+
+        <div sticky offset="100" class="col-md-12 form-btn-container attached-files-btn-container">
+            <button class="btn btn btn-default" ng-click="openSendFvModal()">
+                <i class="fa fa-paper-plane"></i>
+                Envoyer
+            </button>
+            <button no-validation ng-file-select ng-file-change="fileSelected($files, $event)" ng-model="files" ng-multiple="true"
+                    class="btn btn btn-primary no-validation" ng-disabled="isAttachingFiles"><i class="fa fa-paperclip"></i> Attacher
+            </button>
+            <a ui-sref="project.fieldVisit.all" class="btn btn btn-default">
+                <i class="fa fa-reply"></i> Retour
+            </a>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group col-md-6">
+                <label class="pre-label">Référence de la visite :</label>
+                <label>{{activity.ref}}</label>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="pre-label">Contributeur :</label>
+                <label>{{activity.contributor.name}}</label>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="pre-label">Activité :</label>
+                <label>{{activity.title}}</label>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="pre-label">Date de la visite :</label>
+                <label>{{activity.date | date:'dd/MM/yyyy'}}</label>
+            </div>
+        </div>
+        <div class="col-md-12 attached-files-container">
+            <div ng-show="files.length> 0">
+                <div class="attached-file-container" ng-repeat="f in files">
+                    <div class="attached-file">
+                        <div class="thumbnail">
+                            <!--							<i class="fa fa-file fa-5x"></i>-->
+                            <file-type type="{{f.type}}"></file-type>
+                        </div>
+                        <span class="title">{{f.name | truncate:25:"..."}}</span>
+                        <span class="date"><small>{{activity.date | date:'dd/MM/yyyy'}}</small></span>
+                        <span class="owner"><small>{{activity.contributor.name}}</small></span>
+                        <div class="progress-bar-container">
+                            <progressbar ng-show="progressPercentage >= 0" animate="true" value="progressPercentage"
+                                         type="success">{{progressPercentage}}%
+                            </progressbar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="attachedFiles" class="attached-file-container" ng-repeat="file in attachedFiles" >
+                <div class="attached-file">
+                    <div class="thumbnail" ng-click="viewAttachedFile(file)">
+                        <file-type-Bis type="{{file.type}}" src="{{file.webPath}}"></file-type-Bis>
+                    </div>
+                    <span class="title">
+                        <a ng-click="viewAttachedFile(file)"><file-icon type="{{file.type}}"></file-icon> {{file.name | truncate:20:"..."}}</a></span>
+                    <span class="date"><small>{{file.createdAt | date:'dd/MM/yyyy'}}</small></span>
+                    <span class="owner"><small>{{file.createdBy.name}}</small></span>
+                    <span ng-click="openDeleteAttachedFile(file)" class="delete"><i class="fa fa-times"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template " id="sendFvModal">
+    <h2>Envoyer la fiche de contrôle</h2>
+    <form class="col-md-12" name="sendDocexam">
+        <div class="form-group col-md-6">
+            <label>
+                Référence du projet:
+            </label>
+            <label>{{project.ref}}</label>
+        </div>
+        <div class="form-group col-md-6">
+            <label>
+                Nom du projet:
+            </label>
+            <label>{{project.name}}</label>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="pre-label">À
+            </label>
+            <select multiple ui-select2 ng-model="$parent.selectedParticipants" required>
+                <option ng-repeat="participant in personTosend" value="{{participant.email}}">
+                    {{participant.company}} <{{participant.email}}>
+                </option>
+            </select>
+        </div>
+        <div class="form-group col-md-12">
+            <label>Sujet</label>
+            <input type="text" class="form-control" ng-model="$parent.emailSubject">
+        </div>
+        <div class="form-group col-md-12">
+            <label class="pre-label">Contenu de l'email
+            </label>
+            <text-angular ng-model="$parent.emailBody"
+                          ta-toolbar="[['h1','h2','h3','h4','p','pre','quote'],['bold','italics','underline','strikeThrough'],['ul','ol','justifyLeft','justifyCenter','justifyRight','indent','outdent'],['undo','redo']]"
+                    >
+
+            </text-angular>
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="sendFvToParticipants()" class="btn btn-primary" ng-disabled="sendDocexam.$invalid"><i
+                class="fa fa-paper-plane"></i> Envoyer
+        </button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="deleteAttachedFileModal">
+    <div class="ngdialog-message">
+        <h2>Voulez-vous vraiment supprimer ce fichier ?</h2>
+    </div>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal();deleteAttachedFile()" class="btn btn-primary">Confirmer
+        </button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+
+<div ng-show="isPopUpOpen" class="no-top col-md-6 file-pop-up">
+    <a ng-click="closePopUp()" class="file-pop-up-close">
+        <i class="fa fa-2x fa-times"></i>
+    </a>
+    <div class="image-container" ng-if="currentMedia.type.indexOf('image') > -1">
+        <img class="pic" ng-src="{{currentMedia.webPath}}" ng-show="isPopUpOpen"/>
+    </div>
+    <div class="video-container" ng-if="currentMedia.type.indexOf('video') > -1">
+        <video class="video" controls autoplay>
+            <source src="{{currentMedia.webPath}}"  type="video/mp4">
+        </video>
+    </div>
+</div>

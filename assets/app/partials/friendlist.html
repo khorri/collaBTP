@@ -1,0 +1,21 @@
+<div class="scrollable-zone" ng-cloak>
+	<li ng-show="users.length > 1" class="user-element" ng-repeat="user in users | omit:isLogged" ng-click="friendClicked(user)">
+		<a>
+			<img class="img-circle" src="images/no-img.png" alt="User Pic">
+			<span class="body">
+			<span class="from">{{user.name | truncate:15}}</span>
+			<span ng-if="!user.online" class="time">
+				<i class="fa fa-clock-o"></i>
+				<span am-time-ago="user.logoutAt"></span>
+			</span>
+			<span ng-if="user.online" class="time">
+				<span class="text-success"><i class="fa fa-check-circle"></i> Online</span>
+			</span>
+			</span>
+
+		</a>
+	</li>
+	<div class="friend-list-err" ng-if="users.length <= 1">
+		<h2>Aucun utilisateur à afficher</h2>
+	</div>
+</div>

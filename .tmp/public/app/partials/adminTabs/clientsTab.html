@@ -1,0 +1,157 @@
+<div class="box border no-top col-md-12">
+    <div class="box-body col-md-12">
+        <h1>Clients</h1>
+        <button ng-click="openAddCustomerModal()" class="btn btn btn-primary">
+            <i class="fa fa-plus"></i> Nouveau
+        </button>
+        <!-- Customers DATATABLE -->
+        <table st-table="displayedCustomerCollection" st-safe-src="customers" class="table table-striped">
+            <thead>
+            <tr>
+                <th colspan="10">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1"><i class="fa fa-search"></i></span>
+                        <input st-search="" st-delay="100" class="form-control" placeholder="Recherche globale" type="text" />
+                    </div>
+                </th>
+            </tr>
+                <tr>
+                    <th>Personne de Contact</th>
+                    <th>Société</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Qualité</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="customer in displayedCustomerCollection track by $index">
+                    <td>{{ customer.contactPerson }}</td>
+                    <td>{{ customer.company }}</td>
+                    <td>{{ customer.email }}</td>
+                    <td>{{ customer.cellphone }}</td>
+                    <td>{{ customer.type.name }}</td>
+                    <td>
+                        <button ng-click="openUpdateCustomerModal(customer.id)" class="show-btn btn btn-primary">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        <button ng-click="openDeleteCustomerModal(customer.id)" class="show-btn btn btn-danger">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="10" class="text-center">
+                    <div st-pagination="" st-items-by-page="10" st-displayed-pages="10"></div>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<!--Customer Modal-->
+<script type="text/ng-template " id="addCustomerModal">
+    <h2>Nouveau client:</h2>
+    <form class="col-md-12" name="addCustomerForm">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="pre-label">Qualité du Client <sup class="text-danger">*</sup></label>
+                <select ui-select2 ng-model="newCust.type" required>
+                    <option ng-repeat="type in allTypes" value="{{type.id}}">{{type.name}}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Personne de Contact <sup class="text-danger">*</sup></label>
+                <input type="text" class="form-control" ng-model="newCust.contactPerson" required>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Téléphone Fix</label>
+                <input type="text" class="form-control" ng-model="newCust.phone">
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Email <sup class="text-danger">*</sup></label>
+                <input type="email" class="form-control" ng-model="newCust.email" required>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="pre-label">Société <sup class="text-danger">*</sup></label>
+                <input type="text" class="form-control" ng-model="newCust.company" required>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Téléphone Portable</label>
+                <input type="text" class="form-control" ng-model="newCust.cellphone">
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Adresse</label>
+                <textarea class="form-control" ng-model="newCust.address"></textarea>
+            </div>
+
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal(); createCustomer(newCust)" class="btn btn-primary"
+                ng-disabled="addCustomerForm.$invalid || isCreatingNewCustomer">
+            <i class="fa" ng-class="{'fa-plus': !isCreatingNewCustomer, 'fa-circle-o-notch fa-spin': isCreatingNewCustomer}"></i>
+            Ajouter le client</button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+<script type="text/ng-template " id="updateCustomerModal">
+    <h2>Modification d'un client:</h2>
+    <form class="col-md-12" name="updateCustomerForm">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="pre-label">Type de Client <sup class="text-danger">*</sup></label>
+                <select ui-select2 ng-model="currentCust.type.id" required>
+                    <option ng-repeat="type in allTypes" value="{{type.id}}">{{type.name}}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Personne de Contact <sup class="text-danger">*</sup></label>
+                <input type="text" class="form-control" ng-model="currentCust.contactPerson" required>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Téléphone Fix</label>
+                <input type="text" class="form-control" ng-model="currentCust.phone">
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Email <sup class="text-danger">*</sup></label>
+                <input type="email" class="form-control" ng-model="currentCust.email" required>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="pre-label">Société <sup class="text-danger">*</sup></label>
+                <input type="text" class="form-control" ng-model="currentCust.company" required>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Téléphone Portable</label>
+                <input type="text" class="form-control" ng-model="currentCust.cellphone">
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Adresse</label>
+                <textarea class="form-control" ng-model="currentCust.address"></textarea>
+            </div>
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal(); updateCustomer()" class="btn btn-primary"
+                ng-disabled="updateCustomerForm.$invalid || isUpdatingCustomer">
+            <i class="fa" ng-class="{'fa-edit': !isUpdatingCustomer, 'fa-circle-o-notch fa-spin': isUpdatingCustomer}"></i>
+            Modifier le client</button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+<script type="text/ng-template" id="deleteCustomerModal">
+    <div class="ngdialog-message">
+        <h2>Voulez-vous vraiment supprimer ce client ?</h2>
+    </div>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal();deleteCustomer($parent.currentCustomerId)" class="btn btn-primary">Confirmer</button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>

@@ -1,0 +1,104 @@
+<div class="box border no-top col-md-12">
+	<div class="box-body col-md-12">
+		<h1>Facturation - <small>Par méthodes de paiment</small></h1>
+		<div sticky offset="100" class="actions-btn">
+			<a ng-if="subProject.bills" ui-sref="project.missions.invoicelist({sId: subProject.id})" class="btn btn btn-default">
+				<i class="fa fa-list"></i> Liste des factures
+			</a>
+			<a href="#/project/{{subProject.project.id}}/missions" class="btn btn btn-default">
+				<i class="fa fa-reply"></i> Retour
+			</a>
+		</div>
+		<div class="col-md-12">
+			<small><em>Paiement</em></small>
+			<progressbar value="totalPayed" max="calculateTotalTTC()" type="success"><b><span ng-show="totalPayed>0">{{totalPayed | currency:""}} DH / {{calculateTotalTTC() | currency:""}} DH</span></b>
+			</progressbar>
+		</div>
+		<button ng-click="generateBill()" class="btn btn btn-primary" ng-disabled="elementSelected || isGeneretingBill">
+			<i class="fa" ng-class="{'fa-list-alt': !isGeneretingBill, 'fa-circle-o-notch fa-spin':isGeneretingBill}"></i> Générer une facture
+		</button>
+
+		<table st-table="displayedCollection" st-safe-src="paymentMethods" class="table table-striped">
+			<thead>
+				<tr>
+					<th></th>
+					<th>Facture</th>
+					<th>Paiement</th>
+					<th>Montant</th>
+					<th>Date</th>
+					<th>Statut</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="pm in displayedCollection track by $index">
+					<td cs-select="pm"></td>
+					<td>{{pm.bill.title}}</td>
+					<td>
+						<span ng-if="pm.bill && pm.bill.isPaid"><i class="fa text-success fa-ticket"></i></span>
+						<span ng-if="pm.bill && !pm.bill.isPaid"><i class="fa text-danger fa-ticket"></i></span>
+						<span ng-if="!pm.bill"><i class="fa text-muted fa-ticket"></i></span> {{pm.percentage}}% {{pm.label}}
+					</td>
+					<td>{{calculateAmount(pm.percentage) | currency:''}} DH</td>
+					<td>
+						<span ng-if="pm.bill">{{pm.bill.createdAt | date:'dd/MM/yyyy'}}</span>
+						<span ng-if="!pm.bill"><i class="fa fa-minus"></i></span>
+					</td>
+					<td>
+						<span ng-if="pm.bill">
+							<a ng-click="setBillPayed(pm.bill)" ng-if="!pm.bill.isPaid" class="label label-danger">Non payée</a>
+							<a ng-click="setBillNotPayed(pm.bill)"  ng-if="pm.bill.isPaid" class="label label-success">Payée </a>
+						</span>
+						<span ng-if="!pm.bill"><i class="fa fa-minus"></i></span>
+					</td>
+					<td>
+						<button ng-click="generateInvoice(pm.bill, $index)" class="show-btn btn btn-default" ng-if="pm.bill" ng-disabled="isGeneretingInvoice">
+							<i class="fa" ng-class="{'fa-list-alt': !isGeneretingInvoice || !isInvoiceGenerating($index) , 'fa-circle-o-notch fa-spin': isGeneretingInvoice && isInvoiceGenerating($index)}"></i>
+						</button>
+						<span ng-if="!pm.bill"><i class="fa fa-minus"></i></span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="panel panel-default bill-panel">
+			<div class="panel-body">
+				<div class="col-md-12">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="col-md-2"><strong>Total hors taxe:</strong>
+							</div>
+							<div class="col-md-2">{{subProject.budget | currency:''}} DH</div>
+							<div class="col-md-2"><strong>Total payé:</strong>
+							</div>
+							<div class="col-md-2">{{totalPayed | currency:''}} DH</div>
+							<div class="col-md-2"><strong>Total Facturé:</strong>
+							</div>
+							<div class="col-md-2">{{totalBilled | currency:''}} DH</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="col-md-2"><strong>Taxe (TVA 20%):</strong>
+							</div>
+							<div class="col-md-2">{{taxeAmount() | currency:''}} DH</div>
+							<div class="col-md-2"><strong>Total non payé:</strong>
+							</div>
+							<div class="col-md-2">{{totalNotPayed | currency:''}} DH</div>
+							<div class="col-md-2"><strong>Total non facturé:</strong>
+							</div>
+							<div class="col-md-2">{{totalNotBilled | currency:''}} DH</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="col-md-2"><strong>Total:</strong>
+							</div>
+							<div class="col-md-2">{{calculateTotalTTC() | currency:''}} DH</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

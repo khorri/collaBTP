@@ -1,0 +1,35 @@
+<div class="box border no-top col-md-12">
+    <div class="box-body col-md-12">
+        <h1>Tâches</h1>
+
+        <div class="col-md-6">
+            <div class="input-group input-group-lg">
+                <input type="text" class="form-control" placeholder="Ajouter une tâche">
+                <span class="btn-show btn btn-default input-group-addon"><i class="fa fa-plus"></i></span>
+            </div>
+            <div class="todo-list list-group">
+<!--                <li>
+                    <div class="view">
+                        <input class="toggle" type="checkbox" ng-model="todo.completed"
+                               ng-change="toggleCompleted(todo)">
+                        <label ng-dblclick="editTodo(todo)">test</label>
+                        <button class="destroy" ng-click="removeTodo(todo)"></button>
+                    </div>
+                    <form ng-submit="saveEdits(todo, 'submit')">
+                        <input class="edit" ng-trim="false" ng-model="todo.title" todo-escape="revertEdits(todo)"
+                               ng-blur="saveEdits(todo, 'blur')" todo-focus="todo == editedTodo">
+                    </form>
+                </li>-->
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-12">
+                <div class="project-progressbar">
+                    <small><em>Etat d'avancement</em></small>
+                    <progressbar animate="false" value="dynamic" type="success"><b>{{dynamic}}%</b>
+                    </progressbar>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

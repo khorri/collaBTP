@@ -1,0 +1,558 @@
+<div class="col-md-12 add-project-container">
+    <div class="col-md-12 ">
+        <h2>Analyses et statistiques</h2>
+        <div class="sidebar navigation col-md-3">
+            <nav class="list-group">
+                <a class="list-group-item" ng-class="{'active':tog==1}" href="" ng-click="displayStatsByProject()">Affaires</a>
+                <a class="list-group-item" ng-class="{'active':tog==2}" href="" ng-click="displayStatsByProjectLeader()">Affaires par pilotes</a>
+                <a class="list-group-item" ng-class="{'active':tog==3}" href="" ng-click="displayStatsByContributors()">Affaires par collaborateurs</a>
+                <a class="list-group-item" ng-class="{'active':tog==4}" href="" ng-click="displayStatsByBilling()">Etat de facturation</a>
+                <a class="list-group-item" ng-class="{'active':tog==5}" href="" ng-click="displayStatsByVisits()">Les visites</a>
+            </nav>
+        </div>
+        <div class="col-md-9">
+
+            <label> Filtrer les affaires par date : </label>
+            <div class="row">
+
+
+                <div class="col-xs-6">
+                    <label>Du :</label>
+                    <div class="dropdown">
+
+                        <a class="dropdown-toggle" role="button" data-target="#" href="#" id="dropdown1">
+                            <div class="input-group">
+                                <input type="text" class="form-control" ng-model="startDate" ng-change="resetTime();"><span class="input-group-addon"><i
+                                                    class="glyphicon glyphicon-calendar"></i></span>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu date-picker" role="menu" aria-labelledby="dLabel">
+                            <datetimepicker data-ng-model="startDate" data-datetimepicker-config="{ minView: 'day' }" data-on-set-time="startsTimeChosen(newDate)" />
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-xs-6">
+                    <label>Au :</label>
+                    <div class="dropdown">
+
+                        <a class="dropdown-toggle" role="button" data-target="#" href="#" id="dropdown2">
+                            <div class="input-group">
+                                <input type="text" class="form-control" ng-model="endDate" ng-change="resetTime();"><span class="input-group-addon"><i
+                                                    class="glyphicon glyphicon-calendar"></i></span>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu date-picker" role="menu" aria-labelledby="dLabel">
+                            <datetimepicker data-ng-model="endDate" data-datetimepicker-config="{ minView: 'day' }" data-on-set-time="endsTimeChosen(newDate)" />
+                        </ul>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+
+
+        </div>
+        <!-- ******************* by projects ***********************-->
+        <div class="col-md-9" ng-show="tog==1">
+            <div class="row row-stats">
+                <div class="col-md-12">
+
+                    <!--div class="col-md-3">
+                                <div class="panel">
+                                    <div class="panel-body md-panel-body">
+                                        <span odometer="'{{projects.length}}'" class="odometer-theme"/>
+                                    </div>
+                                    <div class="panel-footer">Affaires</div>
+                                </div>
+                            </div-->
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="dashboard-stat blue">
+                            <div class="visual">
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <div class="details">
+                                <div class="number">
+                                    <span odometer="'{{stats.length}}'" class="odometer-theme odo-affairs" />
+                                </div>
+                                <div class="desc"> Affaires </div>
+                            </div>
+                            <a class="more" href="javascript:;"> Savoir plus
+                                <i class="fa fa-arrow-circle-o-right m-icon-swapright m-icon-white"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="dashboard-stat red">
+                            <div class="visual">
+                                <i class="fa fa-bar-chart-o"></i>
+                            </div>
+                            <div class="details">
+                                <div class="number">
+                                    <span odometer="'{{ca | numberTruncat}}'" class="odometer-theme odo-ca" />M DH
+                                </div>
+                                <div class="desc">
+                                    <span odometer="'{{totalPaid | numberTruncat}}'" class="odometer-theme odo-paid" />K /<span odometer="'{{totalBilled | numberTruncat}}'" class="odometer-theme odo-billed" />K
+                                </div>
+                            </div>
+                            <a class="more" href="javascript:;"> Savoir plus
+                                <i class="fa fa-arrow-circle-o-right m-icon-swapright m-icon-white"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="dashboard-stat green-jungle">
+                            <div class="visual">
+                                <i class="fa fa-file-text"></i>
+                            </div>
+                            <div class="details">
+                                <div class="number">
+                                    <span odometer="'{{totalExamDoc}}'" class="odometer-theme odo-exam" />
+                                </div>
+                                <div class="desc"> Documents </div>
+                            </div>
+                            <a class="more" href="javascript:;"> Savoir plus
+                                <i class="fa fa-arrow-circle-o-right m-icon-swapright m-icon-white"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="dashboard-stat purple">
+                            <div class="visual">
+                                <i class="fa fa-globe"></i>
+                            </div>
+                            <div class="details">
+                                <div class="number">
+                                    <span odometer="'{{totalVisits}}'" class="odometer-theme odo-visit" />
+                                </div>
+                                <div class="desc"> Visites </div>
+                            </div>
+                            <a class="more" href="javascript:;"> Savoir plus
+                                <i class="fa fa-arrow-circle-o-right m-icon-swapright m-icon-white"></i>
+                            </a>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <table st-table="displayedCollection" st-safe-src="stats" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="10">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1"><i class="fa fa-search"></i></span>
+                                <input st-search="" st-delay="100" class="form-control" placeholder="Recherche globale" type="text" />
+                            </div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th st-sort="ref">Référence</th>
+                        <th st-sort="name">Nom de projet</th>
+                        <th st-sort="projectLeader">Chef de projet</th>
+                        <th st-sort="date" st-sort-default="reverse">Date du projet</th>
+                        <th st-sort="nbrDocExam">Documents Examinés</th>
+                        <th st-sort="nbrVisits">Visites</th>
+                        <th st-sort="budget">Budget</th>
+                        <th>Facturation</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="project in displayedCollection">
+                        <td>{{ project.ref }}</td>
+                        <td><a href="#/project/{{project.id}}" tooltip="{{project.name}}">{{ project.name | truncate: 33: '...' }}</a></td>
+                        <td>{{ project.projectLeader.name }}</td>
+                        <td>{{ project.date| date:'dd/MM/yyyy' }}</td>
+                        <td>{{project.nbrDocExam}}</td>
+                        <td>{{project.nbrVisits}}</td>
+                        <td>{{project.budget| currency:""}} DH</td>
+
+                        <th class="btn-zone-bg">
+                            <button class="show-btn btn btn-default" ng-click="billingDetails(project, $index)" tooltip="Détails de la facturation"><i class="fa" ng-class="{'fa-money': !isShowingMissions($index), 'fa-circle-o-notch fa-spin': isShowingMissions($index)}"></i>
+                            </button>
+                        </th>
+
+
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="10" class="text-center">
+                            <div st-pagination="" st-items-by-page="10" st-displayed-pages="10"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            <div ng-hide="stats" class="no-project">
+                <h4>Aucun élément à afficher</h4>
+            </div>
+        </div>
+
+        <!-- ******************* by project leaders ***********************-->
+        <div class="col-md-9" ng-show="tog==2">
+            <table st-table="statsByProjectLeaderCollection" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="10">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1"><i class="fa fa-search"></i></span>
+                                <input st-search="" st-delay="100" class="form-control" placeholder="Recherche globale" type="text" />
+                            </div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th st-sort="projectLeader">Chef de projet</th>
+                        <th st-sort="projects">Nbre d'affaires</th>
+                        <th st-sort="docExamsCount">Nbre d'examen de doc</th>
+                        <th st-sort="visitsCount">Nbre visites</th>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="stat in statsByProjectLeaderCollection">
+                    <tr>
+                        <td ng-click="showDetails = ! showDetails;displayDetails(stat.projectLeader,showDetails)"><a href=""><i class="fa fa-plus-square" ng-class="{'fa-plus-square':!showDetails,'fa-minus-square':showDetails}"></i></a></td>
+                        <td>{{ stat.projectLeader.name }}</td>
+                        <td>{{ stat.projects}}</td>
+                        <td>{{ stat.docExamsCount }}</td>
+                        <td>{{ stat.visitsCount }}</td>
+                    </tr>
+                    <tr ng-show="showDetails">
+                        <td colspan="5">
+                            <table class="table nested-table" st-table="projectsByLeader">
+                                <thead>
+                                    <tr>
+                                        <th st-sort="projectLeader">Référence</th>
+                                        <th st-sort="projects">Affaire</th>
+                                        <th st-sort="docExamsCount">Date</th>
+                                        <th st-sort="visitsCount">Budget</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat=" p in projectsByLeader">
+                                        <td>{{p.ref}}</td>
+                                        <td>{{p.name}}</td>
+                                        <td>{{p.starts| date:'dd/MM/yyyy' }}</td>
+                                        <td>{{p.budget| currency:""}} DH</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="10" class="text-center">
+                            <div st-pagination="" st-items-by-page="10" st-displayed-pages="10"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            <div ng-hide="statsByProjectLeaderCollection" class="no-project">
+                <h4>Aucun élément à afficher</h4>
+            </div>
+        </div>
+
+        <!-- ******************* by project contributors ***********************-->
+        <div class="col-md-9" ng-show="tog==3">
+            <table st-table="statsByContributorCollection" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="10">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1"><i class="fa fa-search"></i></span>
+                                <input st-search="" st-delay="100" class="form-control" placeholder="Recherche globale" type="text" />
+                            </div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th st-sort="name">Collaborateur</th>
+                        <th st-sort="projects">Nbre d'affaires</th>
+                        <th st-sort="docExamsCount">Nbre d'examen de doc</th>
+                        <th st-sort="visitsCount">Nbre visites</th>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="stat in statsByContributorCollection">
+                    <tr>
+                        <td ng-click="showProjectsDetails = !showProjectsDetails; displayProjectsDetails(stat.id,showProjectsDetails)"><a href=""><i class="fa fa-plus-square" ng-class="{'fa-plus-square':!showProjectsDetails,'fa-minus-square':showProjectsDetails}"></i></a></td>
+                        <td>{{ stat.name }}</td>
+                        <td>{{ stat.projects}}</td>
+                        <td>{{ stat.docExamsCount }}</td>
+                        <td>{{ stat.visitsCount }}</td>
+                    </tr>
+                    <tr ng-show="showProjectsDetails">
+                        <td colspan="5">
+                            <table class="table nested-table" st-table="projectsByContributor">
+                                <thead>
+                                    <tr>
+                                        <th st-sort="projectLeader">Référence</th>
+                                        <th st-sort="projects">Affaire</th>
+                                        <th st-sort="docExamsCount">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat=" p in projectsByContributor">
+                                        <td>{{p.ref}}</td>
+                                        <td>{{p.name}}</td>
+                                        <td>{{p.starts| date:'dd/MM/yyyy' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                        <td colspan="10" class="text-center">
+                            <div st-pagination="" st-items-by-page="10" st-displayed-pages="10"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            <div ng-hide="statsByContributor" class="no-project">
+                <h4>Aucun élément à afficher</h4>
+            </div>
+        </div>
+
+        <!-- ******************* billings stats ***********************-->
+        <div class="col-md-9" ng-show="tog==4">
+            <table st-table="billingStatsCollection" st-safe-src="billingStats" class="table table-striped" st-set-filter="myStrictFilter">
+                <thead>
+                    <tr>
+                        <th colspan="10">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1"><i class="fa fa-search"></i></span>
+                                <input st-search="" st-delay="100" class="form-control" placeholder="Recherche globale" type="text" />
+                            </div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th st-sort="title">N° facture</th>
+                        <th st-sort="createdAt" st-sort-default="reverse">Date</th>
+                        <th st-sort="project">Projet</th>
+                        <th st-sort="customer">Client</th>
+                        <th st-sort="isPaid">Etat</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>
+                            <select st-search="isPaid">
+                                <option value="">Tous</option>
+                                <option value="true">Payée</option>
+                                <option value="false">Non Payée</option>
+                            </select>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="bill in billingStatsCollection">
+                        <td>{{ bill.title }}</td>
+                        <td>{{bill.createdAt | date:'dd/MM/yyyy'}}</td>
+                        <td><a href="#/project/{{bill.project.id}}" tooltip="{{bill.project.name}}">{{ bill.project.name | truncate: 33: '...' }}</a></td>
+                        <td>{{ bill.customer }}</td>
+                        <td><span ng-if="!bill.isPaid" class="label label-danger">Non Payée</span>
+                            <span ng-if="bill.isPaid" class="label label-success">Payée </span>
+                        </td>
+                        <td>
+                            <a href="#/project/{{bill.project.id}}/missions/facturation/{{bill.id}}" class="show-btn btn btn-default" tooltip="Détails">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                        </td>
+
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="10" class="text-center">
+                            <div st-pagination="" st-items-by-page="10" st-displayed-pages="10"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            <div ng-hide="isBillingStatsEmpty" class="no-project">
+                <h4>Aucun élément à afficher</h4>
+            </div>
+        </div>
+        <div class="col-md-9" ng-show="tog==5">
+            <div class="row row-stats">
+                <div class="col-md-12">
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                        <div class="dashboard-stat blue">
+                            <div class="visual">
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <div class="details">
+                                <div class="number">
+                                    <span odometer="'{{totalNewVisits}}'" class="odometer-theme odo-new" />
+                                </div>
+                                <div class="desc"> Nouveau </div>
+                            </div>
+                            <a class="more" href="javascript:;"> Savoir plus
+                                <i class="fa fa-arrow-circle-o-right m-icon-swapright m-icon-white"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                        <div class="dashboard-stat yellow">
+                            <div class="visual">
+                                <i class="fa fa-refresh"></i>
+                            </div>
+                            <div class="details">
+                                <div class="number">
+                                    <span odometer="'{{totalProcessVisits}}'" class="odometer-theme odo-processing" />
+                                </div>
+                                <div class="desc"> En Cours </div>
+                            </div>
+                            <a class="more" href="javascript:;"> Savoir plus
+                                <i class="fa fa-arrow-circle-o-right m-icon-swapright m-icon-white"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                        <div class="dashboard-stat red">
+                            <div class="visual">
+                                <i class="fa fa-check-square"></i>
+                            </div>
+                            <div class="details">
+                                <div class="number">
+                                    <span odometer="'{{totalClosedVisits}}'" class="odometer-theme odo-closed" />
+                                </div>
+                                <div class="desc"> Cloturé </div>
+                            </div>
+                            <a class="more" href="javascript:;"> Savoir plus
+                                <i class="fa fa-arrow-circle-o-right m-icon-swapright m-icon-white"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <table st-table="statsByVisitsCollection" st-safe-src="visitsByStatus" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="10">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1"><i class="fa fa-search"></i></span>
+                                <input st-search="" st-delay="100" class="form-control" placeholder="Recherche globale" type="text" />
+                            </div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th>Collaborateur</th>
+                        <th># Nouveau</th>
+                        <th># En cours</th>
+                        <th># Clôturé</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="v in statsByVisitsCollection" class="animate">
+                        <td><img class="img-circle" src="images/no-img.png" alt="User Pic">
+                        </td>
+                        <td>{{ v.contributor.name }}</td>
+                        <td><span class="btn btn-info" ng-click="showVisitDialogModal('new',v.contributor)">{{ v.newVisits }}</span></td>
+                        <td><span class="btn btn-warning" ng-click="showVisitDialogModal('process',v.contributor)">{{ v.processVisits }}</span></td>
+                        <td><span class="btn btn-danger" ng-click="showVisitDialogModal('closed',v.contributor)">{{ v.closedVisits }}</span></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="10" class="text-center">
+                            <div st-pagination="" st-items-by-page="10" st-displayed-pages="10"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            <div ng-hide="visitsByStatus" class="no-project">
+                <h4>Aucun élément à afficher</h4>
+            </div>
+
+
+        </div>
+    </div>
+
+    <!-------------------------------  Afficher le détail des facture --------------------------- - -->
+    <script type="text/ng-template" id="billingDetailModal">
+        <div class="ngdialog-message">
+            <h2>{{projectSelected.name}}<br/><small>Ref: {{projectSelected.ref}}</small></h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Budget</th>
+                        <th>Facturé</th>
+                        <th>Non facturé</th>
+                        <th>Payé</th>
+                        <th>Non payé</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{projectSelected.budget| currency:""}} DH</td>
+
+                        <td>{{projectSelected.totalBilling| currency:""}} DH</td>
+                        <td>{{notBilled |currency:""}} DH</td>
+                        <td>
+                            {{projectSelected.totalPaid| currency:""}} DH
+                        </td>
+                        <td>
+                            {{notPaid| currency:""}} DH
+                        </td>
+
+                    </tr>
+                    <!--
+				<tr>
+					<td style="text-align:right"><b>Total:</b>
+					</td>
+					<td>{{calculateTotalBudget(subProjects)| currency:""}} DH</td>
+				</tr>
+				-->
+                </tbody>
+            </table>
+
+        </div>
+        <div class="ngdialog-buttons mt">
+            <button ng-click="closeModal()" class="btn btn-default">Ok</button>
+        </div>
+    </script>
+
+    <!-------------------------------  Afficher le détail des facture --------------------------- - -->
+    <script type="text/ng-template" id="visitDialogModal">
+        <div class="ngdialog-message">
+
+            <table st-table="projectsByVisitsStatusCollection" st-safe-src="projectsByVisitsStatus" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Référence</th>
+                        <th>Nom du projet</th>
+                        <th>Date du projet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="p in projectsByVisitsStatusCollection">
+                        <td>{{p.ref}}</td>
+                        <td ng-click="closeModal();"><a href="#/project/{{p.id}}" tooltip="{{p.name}}">{{ p.name | truncate: 50: '...' }}</a></td>
+                        <td>{{p.starts | date:'dd/MM/yyyy'}}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            <div st-pagination="" st-items-by-page="10" st-displayed-pages="10"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+
+        </div>
+    </script>

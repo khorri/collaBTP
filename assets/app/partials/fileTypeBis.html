@@ -1,0 +1,10 @@
+<div class="image-container" ng-if="image && !video">
+    <img class="pic" src="{{source}}" ng-if="image"/>
+    </div>
+<div class="video-container" ng-if="video && !image" >
+    <i class="fa fa-2x fa-play-circle play-video-icon"></i>
+    <video class="video" ng-if="video">
+        <source src="{{source}}"  type="video/mp4">
+    </video>
+</div>
+<i class="fa fa-5x" ng-class="type" ng-if="!video && !image"></i>

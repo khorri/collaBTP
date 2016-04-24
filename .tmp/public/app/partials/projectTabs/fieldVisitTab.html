@@ -1,0 +1,234 @@
+<div class="box border no-top col-md-12">
+    <div class="box-body col-md-12">
+        <h1>Visites de chantier</h1>
+        <button ng-click="openAddActivityModal()" class="btn btn btn-primary ">
+            <i class="fa fa-plus "></i> Ajouter une visite
+        </button>
+        <table st-table="displayedCollection" st-safe-src="activities" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Référence</th>
+                <th>Statut</th>
+                <th>Activités</th>
+                <th>Désignation</th>
+                <th>Contributeur</th>
+                <th>Date</th>
+                <th>Fichiers</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="activity in activities track by $index ">
+                <td>{{ activity.ref }}</td>
+                <td><span ng-if="activity.status == 'Nouveau' " class="label label-primary">{{ activity.status }}</span>
+                    <span ng-if="activity.status == 'En cours d’exécution' " class="label label-success">{{ activity.status }}</span>
+                    <span ng-if="activity.status == 'Clôturé' " class="label label-danger">{{ activity.status }}</span>
+                </td>
+                <td>{{ activity.title }}</td>
+                <td>{{ activity.description | truncate: 30: '...' }}</td>
+                <td>{{ activity.contributor.name }}</td>
+                <td>
+                    <span ng-if="activity.date ">{{activity.date | date:'dd/MM/yyyy'}}</span>
+                    <span ng-if="!activity.date ">Non défini</span>
+                </td>
+                <td>
+                    <a ng-click=" toAttachedFiles[$index] = !toAttachedFiles[$index]; isChangingState = !isChangingState;" ui-sref="project.fieldVisit.attachedFiles({aId: activity.id})" class="show-btn btn btn-default"
+                            tooltip="Fichiers attachés: {{activity.attachedFiles.length}}" ng-disabled="isChangingState">
+                    <i class="fa" ng-class="{'fa-paperclip': !toAttachedFiles[$index], 'fa-circle-o-notch fa-spin': toAttachedFiles[$index]}"></i>
+                    </a>
+                </td>
+                <td class="btn-zone-md">
+                    <button class="show-btn btn btn-default" ng-click="generateFVDoc(activity, $index)"
+                            ng-disabled="isGeneratingFV" tooltip="Générer le pdf">
+                        <i class="fa"
+                           ng-class="{'fa-file-pdf-o': !isGeneratingFV|| !isGeneratingFVDoc($index), 'fa-circle-o-notch fa-spin': isGeneratingFV && isGeneratingFVDoc($index)}"></i>
+                    </button>
+
+                    <button class="show-btn btn btn-primary" tooltip="Modifier" ng-click="openUpdateActivityModal(activity.id)"><i
+                            class="fa fa-edit ">
+                    </i>
+                    </button>
+                    <button ng-click="openDeleteActivityModal(activity)" class="show-btn btn btn-danger" tooltip="Supprimer">
+                        <i class="fa fa-trash "></i>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div ng-hide="displayedCollection" class="no-project">
+            <h4>Aucun élément à afficher</h4>
+        </div>
+    </div>
+</div>
+
+
+<!-- START ACTIVITY MODALS -->
+<script type="text/ng-template " id="addActivityModal ">
+    <h2>Nouvelle visite:</h2>
+    <form class="col-md-12" name="addVisitForm">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="pre-label">Référence du projet :</label>
+                <label>{{project.ref}}</label>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Nom du projet :</label>
+                <label>{{project.name}}</label>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Activité :<sup class="text-danger">*</sup>
+                </label>
+                <select ui-select2 ng-model="newActivity.title" name="newActivity.title" required>
+                    <option value="CONTRÔLE DE L'ETANCHIETE DES TERRASSES">CONTRÔLE DE L'ETANCHIETE DES TERRASSES
+                    </option>
+                    <option value="CONTRÔLE DES FONDATIONS">CONTRÔLE DES FONDATIONS</option>
+                    <option value="CONTRÔLE DES LONGRINES">CONTRÔLE DES LONGRINES</option>
+                    <option value="CONTRÔLE DES PLANCHERS">CONTRÔLE DES PLANCHERS</option>
+                    <option value="CONTRÔLE DES GROS ŒUVRES">CONTRÔLE DES GROS ŒUVRES</option>
+                    <option value="CONTRÔLE DES RADIERS">CONTRÔLE DES RADIERS</option>
+                    <option value="CONTRÔLE DES POTEAUX">CONTRÔLE DES POTEAUX</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Description :</label>
+                <textarea class="form-control" ng-model="newActivity.description"
+                          name="newActivity.description"></textarea>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="pre-label">Statut :<sup class="text-danger">*</sup>
+                </label>
+                <select ui-select2 ng-model="newActivity.status" name="newActivity.status" required>
+                    <option value="Nouveau">Nouveau</option>
+                    <option value="En cours d’exécution">En cours d’exécution</option>
+                    <option value="Clôturé">Clôturé</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Date<sup class="text-danger">*</sup>
+                </label>
+
+                <div class="dropdown">
+                    <a class="dropdown-toggle" role="button" data-target="#" href="#">
+                        <div class="input-group">
+                            <input type="text" class="form-control project-date" data-ng-model="activityDate" readonly required><span
+                                class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu date-picker" role="menu" aria-labelledby="dLabel">
+                        <datetimepicker data-ng-model="newActivity.date" data-datetimepicker-config="{ minView: 'day' }"
+                                        on-set-time="activityDateChosen()" required/>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Contributeur<sup class="text-danger">*</sup>
+                </label>
+                <select ui-select2 ng-model="newActivity.contributor" name="newActivity.contributor" required>
+                    <option ng-repeat="contributor in project.contributors" value="{{contributor.id}}">
+                        {{contributor.name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal(); createActivity()" class="btn btn-primary" ng-disabled="addVisitForm.$invalid">
+            Créer l'activité
+        </button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+<script type="text/ng-template " id="updateActivityModal ">
+    <h2>Modification d'une visite:</h2>
+    <form class="col-md-12" name="updateVisitForm">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="pre-label">Référence du projet :</label>
+                <label>{{project.ref}}</label>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Nom du projet :</label>
+                <label>{{project.name}}</label>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Activité :<sup class="text-danger">*</sup>
+                </label>
+                <select ui-select2 ng-model="currentActivity.title" name="currentActivity.title" required>
+                    <option value="CONTRÔLE DE L'ETANCHIETE DES TERRASSES">CONTRÔLE DE L'ETANCHIETE DES TERRASSES
+                    </option>
+                    <option value="CONTRÔLE DES FONDATIONS">CONTRÔLE DES FONDATIONS</option>
+                    <option value="CONTRÔLE DES LONGRINES">CONTRÔLE DES LONGRINES</option>
+                    <option value="CONTRÔLE DES PLANCHERS">CONTRÔLE DES PLANCHERS</option>
+                    <option value="CONTRÔLE DES GROS ŒUVRES">CONTRÔLE DES GROS ŒUVRES</option>
+                    <option value="CONTRÔLE DES RADIERS">CONTRÔLE DES RADIERS</option>
+                    <option value="CONTRÔLE DES POTEAUX">CONTRÔLE DES POTEAUX</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Description :</label>
+                <textarea class="form-control" ng-model="currentActivity.description"
+                          name="currentActivity.description"></textarea>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="pre-label">Statut :<sup class="text-danger">*</sup>
+                </label>
+                <select ui-select2 ng-model="currentActivity.status" name="currentActivity.status" required>
+                    <option value="Nouveau">Nouveau</option>
+                    <option value="En cours d’exécution">En cours d’exécution</option>
+                    <option value="Clôturé">Clôturé</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Date :<sup class="text-danger">*</sup>
+                </label>
+
+                <div class="dropdown">
+                    <a class="dropdown-toggle" role="button" data-target="#" href="#">
+                        <div class="input-group">
+                            <input type="text" class="form-control project-date" data-ng-model="currentActivityDate" readonly required><span
+                                class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu date-picker" role="menu" aria-labelledby="dLabel">
+                        <datetimepicker data-ng-model="currentActivity.date"
+                                        data-datetimepicker-config="{ minView: 'day' }"
+                                        on-set-time="activityDateChosen()" required/>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="pre-label">Contributeur: <sup class="text-danger">*</sup>
+                </label>
+                <select ui-select2 ng-model="currentActivity.contributor.id" name="currentActivity.contributor.id"
+                        required>
+                    <option ng-repeat="contributor in project.contributors" value="{{contributor.id}}">
+                        {{contributor.name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal(); updateActivity()" class="btn btn-primary "
+                ng-disabled="updateVisitForm.$invalid">Modifier l'activité
+        </button>
+        <button ng-click="closeModal() " class="btn btn-default ">Annuler</button>
+    </div>
+</script>
+<script type="text/ng-template" id="deleteActivityModal">
+    <div class="ngdialog-message">
+        <h2>Voulez-vous vraiment supprimer cette activité ?</h2>
+    </div>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal();deleteActivity($parent.currentActivity)" class="btn btn-primary">Confirmer
+        </button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+
+
+<!-- END ACTIVITY MODALS -->

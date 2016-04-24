@@ -1,0 +1,445 @@
+<div class="col-md-12 add-project-container">
+    <form id="addProjectForm" name="addProjectForm" role="form">
+        <div class="col-md-12 ">
+            <h2>Details du projet</h2>
+
+            <div sticky offset="100" class="col-md-12 form-btn-container">
+                <button ng-click="createProject()" ng-disabled="addProjectForm.$invalid || isCreating || max ==null || max == -1" class="btn btn-primary">
+                    <i class="fa" ng-class="{'fa-plus': !isCreating, 'fa-circle-o-notch fa-spin': isCreating}"></i> Créer le projet
+                </button>
+                <a href="#/home" class="btn btn-default">Annuler</a>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Nom du projet <sup class="text-danger">*</sup>
+                    </label>
+                    <input type="text" ng-model="projectName" class="form-control" placeholder="Insérez un nom de projet" ng-maxlength=200 required>
+                </div>
+                <div class="form-group">
+                    <label>Ville <sup class="text-danger">*</sup>
+                    </label>
+                    <input class="form-control" ng-model="city" placeholder="Insérez la ville" ng-maxlength=200 required>
+                </div>
+                <div class="form-group">
+                    <label>Adresse <sup class="text-danger">*</sup>
+                    </label>
+                    <textarea class="form-control" ng-model="address" placeholder="Insérez l'adresse du projet" required></textarea>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Chef de project <sup class="text-danger">*</sup>
+                    </label>
+                    <ui-select class="no-validation" theme="select2" ng-model="project.projectLeader" required>
+                        <ui-select-match placeholder="">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="user in allDirectersEngineers | filter: $select.search">
+                            <span ng-bind-html="user.name"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="form-group">
+                    <label>Collaborateurs <sup class="text-danger">*</sup>
+                    </label>
+                    <ui-select notempty multiple theme="select2" ng-model="project.contributors" required>
+                        <ui-select-match placeholder="">{{$item.name}}</ui-select-match>
+                        <ui-select-choices repeat="user in allUsers | filter: $select.search">
+                            <span ng-bind-html="user.name"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <h2>Client et participants</h2>
+
+            <div class="col-md-6">
+                <div class="form-group col-md-8">
+                    <label>Client <sup class="text-danger">*</sup>
+                    </label>
+                    <ui-select class="no-validation" theme="select2" ng-model="project.customer" required>
+                        <ui-select-match placeholder="">{{$select.selected.company}}</ui-select-match>
+                        <ui-select-choices repeat="customer in allCustomers | filter: $select.search">
+                            <div ng-bind-html="customer.company"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="form-group col-md-4" style="margin-top: 20px;">
+                    <button type="button" ng-click="openAddCustomerModal()" class="btn btn-default btn-show col-md-4"><i class="fa" ng-class="{'fa-plus': !newCustomerOpen, 'fa-minus': newCustomerOpen}"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group col-md-8">
+                    <label>Intervenants <sup class="text-danger">*</sup>
+                    </label>
+                    <ui-select notempty multiple theme="select2" ng-model="project.participants" required>
+                        <ui-select-match placeholder="">{{$item.company}}</ui-select-match>
+                        <ui-select-choices repeat="participant in allParticipants | filter: $select.search">
+                            <div ng-bind-html="participant.company"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="form-group col-md-4" style="margin-top: 24px;">
+                    <button type="button" ng-click="openAddParticipantModal()" class="btn btn-default btn-show col-md-4"><i class="fa" ng-class="{'fa-plus': !newParticipantOpen, 'fa-minus': newParticipantOpen}"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <h2>Documents du projet</h2>
+
+            <div class="form-group col-md-6">
+                <div class="form-group">
+                    <label>Désignation <sup class="text-danger"></sup>
+                    </label>
+                    <input type="text" ng-model="fileName" class="form-control" placeholder="Insérez une désignation du document" ng-maxlength=200>
+                </div>
+                <div class="form-group">
+                    <label>Description <sup class="text-danger"></sup>
+                    </label>
+                    <textarea class="form-control" ng-model="fileDescription" placeholder="Insérez un description du document"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Fichier <sup class="text-danger"></sup>
+                    </label>
+                    <div>
+            <div class="drop document" ng-file-drop=" " ng-file-select=" " ng-model="files"
+                 ng-model-rejected="rejFiles "
+                 drag-over-class="{accept: 'dragover', reject: 'dragover-err', delay:100} " class="drop-box "
+                 ng-multiple="true " allow-dir="false " ng-accept=" '*' ">
+                Cliquer ou glisser-déposer le fichier
+            </div>
+            <div ng-show="files.length>0">
+                <div class="file-container dialog-upload-container" ng-repeat="f in files">
+                    <div class="thumbnail file col-md-2">
+                        <i class="fa fa-file-pdf-o fa-3x"></i>
+                    </div>
+                    <span class="title">{{f.name}} - {{f.size|FileSize}}</span>
+                    <progressbar ng-show="progressPercentage >= 0" animate="true" value="progressPercentage"
+                                 type="success">{{progressPercentage}}%
+                    </progressbar>
+                </div>
+            </div>
+        </div>
+                </div>
+                <div class="form-group">
+                    <button type="button" ng-disabled="!fileName && !newDocument.isUploaded" ng-click="addDocument()" class="btn btn-primary btn-show">Ajouter</i>
+                    </button>
+                    <button type="button" ng-click="cancelAddingDocument()"class="btn btn-default btn-show">Annuler</i>
+                    </button>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <ul class="list-group" ng-hide="documents.length>0">
+                    <li class="list-group-item">
+                        Aucun document à afficher.
+                    </li>
+                </ul>
+                <ul class="list-group" ng-show="documents.length>0">
+                    <li class="list-group-item" ng-repeat="doc in documents track by $index">
+                        <div class="checkbox checkbox-primary">
+                            <input type="checkbox" id="checkbox{{$index}}">
+                            <label for="checkbox{{$index}}">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <a href="{{doc.webPath}}" target="_blank" class="attachment-thumbnail-preview">
+                                           <span class="attachment-thumbnail-preview-ext">{{doc.ext}}</span>
+                                        </a>
+                                    </div>
+                                    <div class="media-body attachment-body" tooltip="{{doc.description}}">
+                                        <h4 class="media-heading">{{doc.name}}</h4> Ajouté le : {{doc.createdAt | date:'dd/MM/yyyy' }} à {{doc.createdAt | date:'HH:mm:ss' }} par {{doc.createdBy.name}}
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="row buttons">
+
+                            <div class="col-sm-6">
+                                <button type="button" ng-click="editDocument(doc)"class="btn btn-xs btn-primary"><i class="fa fa-pencil"></i> Modifier</button>
+                                <button type="button" ng-click="openDeleteDocModal(doc)" class="btn btn-xs btn-danger"><i class="fa fa-close"></i> Supprimer</button>
+                                <a  ng-show="doc.isUploaded" href="{{doc.webPath}}" target="_blank" class="btn btn-xs btn-success"><i class="fa fa-download"></i> Télécharger</a>
+                            </div>
+
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <h2>Date de début et de fin du projet</h2>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Durée du projet <sup class="text-danger">*</sup>
+                    </label>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="number" class="form-control" min=1 ng-model="durationTime" placeholder="Insérer la durée du projet" required>
+
+                            <div class="input-group-addon">MOIS</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Date du début de projet <sup class="text-danger">*</sup>
+                    </label>
+
+                    <div class="dropdown">
+                        <a class="dropdown-toggle" id="dropdown2" role="button" data-target="#" href="#">
+                            <div class="input-group">
+                                <input type="text" class="form-control project-date" data-ng-model="projectStarts" readonly required><span class="input-group-addon"><i
+                                    class="glyphicon glyphicon-calendar"></i></span>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu date-picker" role="menu" aria-labelledby="dLabel">
+                            <datetimepicker data-ng-model="starts" data-datetimepicker-config="{ minView: 'day' }" on-set-time="startsTimeChosen()" />
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Date de fin de projet</label>
+
+                    <div class="dropdown">
+                        <a class="dropdown-toggle" id="dropdown2" role="button" data-target="#" href="#">
+                            <div class="input-group">
+                                <input type="text" class="form-control project-date" data-ng-model="projectEnds" readonly><span class="input-group-addon"><i
+                                    class="glyphicon glyphicon-calendar"></i></span>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu date-picker" role="menu" aria-labelledby="dLabel">
+                            <datetimepicker data-ng-model="ends" data-datetimepicker-config="{ minView: 'day' }" on-set-time="endsTimeChosen()" />
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-12">
+            <h2>Missions</h2>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Missions <sup class="text-danger">*</sup>
+                    </label>
+                    <ui-select notempty multiple theme="select2" ng-model="project.missions" required>
+                        <ui-select-match placeholder="">{{$item.name}}</ui-select-match>
+                        <ui-select-choices repeat="mission in allMissions | filter: $select.search">
+                            {{mission.name}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Budget <sup class="text-danger">*</sup>
+                    </label>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="number" class="form-control" min=0 ng-model="budget" placeholder="Insérer le budget" required>
+
+                            <div class="input-group-addon">DH</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12" ng-if="budget">
+                <label>Modalités de Paiement <sup class=" text-danger ">*</sup>
+                </label>
+
+                <div class="col-md-12 ">
+                    <div class="col-md-12 ">
+                        <progress class="progress-striped active ">
+                            <bar ng-repeat="pm in paymentmethods track by $index " value="pm.percentage " type="{{nextBarType($index)}} "><span ng-hide="pm.percentage < 1 ">{{pm.percentage}}% {{pm.label}}</span>
+                            </bar>
+                        </progress>
+                    </div>
+                </div>
+                <div ng-repeat="pm in paymentmethods " class="payment-method col-md-12 ">
+                    <div class="col-md-4 ">
+                        <div class="input-group ">
+                            <input ng-enter="addPm() " ng-esc="removePm($index + 1) " type="number " class="form-control " ng-model="pm.percentage " placeholder="Insérer le pourcentage " ng-change="checkTotal() " min=0 max=100 required>
+
+                            <div class="input-group-addon "> % = {{budgetPercentage($index)}} DH</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 ">
+                        <input ng-enter="addPm() " ng-esc="removePm($index + 1) " type="text " class="form-control " ng-model="pm.label " placeholder="Inserer le label" required>
+                    </div>
+                    <div class="col-md-2 ">
+                        <div class="btn-toolbar ">
+                            <button ng-click="removePm($index) " ng-show="paymentmethods.length> 1 && $index != 0" type="button" class="btn-show btn btn-danger"><i class="fa fa-times"></i>
+                            </button>
+                            <button ng-click="addPm()" ng-show="$index == paymentmethods.length - 1" type="button" class="btn-show btn btn-default"><i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <span ng-if="max == -1" class="text-danger"><i class="fa fa-exclamation-triangle"></i> Erreur: Vous ne pouvez pas dépasser un total 100%</span>
+        </div>
+    </form>
+</div>
+<script type="text/ng-template " id="addCustomerModal">
+    <h2>Nouveau client:</h2>
+    <form class="form-horizontal col-md-12" name="newCustomerForm">
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Type de Client <sup class="text-danger">*</sup>
+            </label>
+
+            <div class="col-sm-8">
+                <ui-select theme="select2" ng-model="newCustomer.type" required>
+                    <ui-select-match placeholder="">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="type in allTypes">
+                        {{type.name}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Société <sup class="text-danger">*</sup>
+            </label>
+
+            <div class="col-sm-8">
+                <input type="text" class="form-control" ng-model="newCustomer.company" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Personne de contact <sup class="text-danger">*</sup>
+            </label>
+
+            <div class="col-sm-8">
+                <input type="text" class="form-control" ng-model="newCustomer.contactPerson" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">E-mail <sup class="text-danger">*</sup>
+            </label>
+
+            <div class="col-sm-8">
+                <input type="email" class="form-control" ng-model="newCustomer.email" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Téléphone
+            </label>
+
+            <div class="col-sm-8">
+                <input type="text" class="form-control" ng-model="newCustomer.phone">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Portable
+            </label>
+
+            <div class="col-sm-8">
+                <input type="text" class="form-control" ng-model="newCustomer.cellphone">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Adresse <sup class="text-danger">*</sup>
+            </label>
+
+            <div class="col-sm-8">
+                <textarea class="form-control" ng-model="newCustomer.address" required></textarea>
+            </div>
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="createCustomer()" class="btn btn-primary" ng-disabled="newCustomerForm.$invalid || isCreatingNewCustomer"><i class="fa" ng-class="{'fa-plus': !isCreatingNewCustomer,  'fa-circle-o-notch': isCreatingNewCustomer}"></i> Créer un nouveau client
+        </button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+<script type="text/ng-template " id="addParticipantModal">
+    <h2>Nouvel intervenant:</h2>
+    <form class="form-horizontal" name="newParticipantForm">
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Type d'intervenant <sup class="text-danger">*</sup>
+            </label>
+
+            <div class="col-sm-8">
+                <ui-select theme="select2" ng-model="newParticipant.type" required>
+                    <ui-select-match placeholder="">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="type in allTypes">
+                        {{type.name}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Société <sup class="text-danger">*</sup>
+            </label>
+
+            <div class="col-sm-8">
+                <input type="text" class="form-control" ng-model="newParticipant.company" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Personne de contact <sup class="text-danger">*</sup>
+            </label>
+
+            <div class="col-sm-8">
+                <input type="text" class="form-control" ng-model="newParticipant.contactPerson" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">E-mail <sup class="text-danger">*</sup>
+            </label>
+
+            <div class="col-sm-8">
+                <input type="email" class="form-control" ng-model="newParticipant.email" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Téléphone
+            </label>
+
+            <div class="col-sm-8">
+                <input type="text" class="form-control" ng-model="newParticipant.phone">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Portable
+            </label>
+
+            <div class="col-sm-8">
+                <input type="text" class="form-control" ng-model="newParticipant.cellphone">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Adresse <sup class="text-danger">*</sup>
+            </label>
+
+            <div class="col-sm-8">
+                <textarea class="form-control" ng-model="newParticipant.address" required></textarea>
+            </div>
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="createParticipant()" class="btn btn-primary" ng-disabled="newParticipantForm.$invalid || isCreatingNewParticipant"><i class="fa" ng-class="{'fa-plus': !isCreatingNewParticipant,  'fa-circle-o-notch': isCreatingNewParticipant}"></i> Créer un nouvel intervenant
+        </button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+<script type="text/ng-template" id="DeleteDocModal">
+    <div class="ngdialog-message">
+        <h2>Suppression d'un document</h2>
+
+        <p>Voulez-vous vraiment supprimer ce document?</p>
+    </div>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="deleteDocument($parent.currentDocument);closeModal();" class="btn btn-primary">Confirmer
+        </button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>

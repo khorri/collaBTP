@@ -1,0 +1,51 @@
+[INFO_|03/08 17:24:20|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 9 / 30
+[INFO_|03/08 17:24:20|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 10 / 31
+[INFO_|03/08 17:24:20|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 11 / 11
+[INFO_|03/08 17:24:20|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 19 / 16
+
+-------------------------------------------------------
+[INFO_|03/08 17:30:16|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 9 / 30
+[INFO_|03/08 17:30:16|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 10 / 30
+[INFO_|03/08 17:30:16|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 11 / 11
+[INFO_|03/08 17:30:16|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 19 / 16
+
+--------------------------------------------
+[INFO_|03/08 17:32:33|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 9 / 8106
+[INFO_|03/08 17:32:33|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 10 / 3839
+[INFO_|03/08 17:32:33|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 11 / 5153
+[INFO_|03/08 17:32:33|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 19 / 28
+
+---------------------------------------------------------------------
+[INFO_|03/08 17:32:39|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 9 / 5328
+[INFO_|03/08 17:32:39|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 10 / 3777
+[INFO_|03/08 17:32:39|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 11 / 5147
+[INFO_|03/08 17:32:39|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 19 / 29
+[INFO_|03/08 17:32:39|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:414] Speed    : 9.0 km/h 355.0
+
+-----------------------------------------------------------
+[INFO_|03/08 17:32:39|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 9 / 5257
+[INFO_|03/08 17:32:39|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 10 / 2945
+[INFO_|03/08 17:32:39|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 11 / 5153
+[INFO_|03/08 17:32:39|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 19 / 35
+[INFO_|03/08 17:32:39|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:414] Speed    : 11.0 km/h 339.0
+
+-------------------------------------------------------------------
+[INFO_|03/08 17:32:46|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 9 / 5371
+[INFO_|03/08 17:32:46|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 10 / 5473
+[INFO_|03/08 17:32:46|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 11 / 5157
+[INFO_|03/08 17:32:46|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 19 / 28
+[INFO_|03/08 17:32:46|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:414] Speed    : 12.0 km/h 329.0
+
+--------------------------------------------------------------------
+[INFO_|03/08 20:24:56|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 9 / 29
+[INFO_|03/08 20:24:56|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 10 / 63
+[INFO_|03/08 20:24:56|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 11 / 12
+[INFO_|03/08 20:24:56|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 19 / 16
+[INFO_|03/08 20:24:56|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:414] Speed    : 0.0 km/h 0.0
+
+--------------------------------------------------------
+[INFO_|03/08 20:32:52|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 9 / 29
+[INFO_|03/08 20:32:52|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 10 / 52
+[INFO_|03/08 20:32:52|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 11 / 11
+[INFO_|03/08 20:32:52|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:313] IOIndex / IOValue : 19 / 16
+[INFO_|03/08 20:32:52|TrackClientPacketHandler.parseInsertRecord_TeltonikaFM_TCP:414] Speed    : 0.0 km/h 0.0

@@ -1,0 +1,187 @@
+<div class="box border no-top col-md-12" ng-controller="userCtrl">
+    <div class="box-body col-md-12">
+        <h1>Collaborateurs</h1>
+        <button ng-click="openAddUserDialog()" class="btn btn btn-primary">
+            <i class="fa fa-plus"></i> Nouveau
+        </button>
+        <table st-table="displayedCollection" st-safe-src="users"  class="table table-striped">
+            <thead>
+            <tr>
+                <th colspan="10">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1"><i class="fa fa-search"></i></span>
+                        <input st-search="" st-delay="100" class="form-control" placeholder="Recherche globale" type="text" />
+                    </div>
+                </th>
+            </tr>
+                <tr>
+                    <th></th>
+                    <th>Nom</th>
+                    <th>Tél</th>
+                    <th>Email</th>
+                    <th>Rôle</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="usr in displayedCollection" class="animate">
+                    <td><img class="img-circle" src="images/no-img.png" alt="User Pic">
+                    </td>
+                    <td>{{ usr.name }}</td>
+                    <td>{{ usr.phone }}</td>
+                    <td>{{ usr.email }}</td>
+                    <td>{{ usr.role.title }}</td>
+                    <th>
+                        <button ng-click="openUpdateUserDialog(usr)" class="show-btn btn btn-primary">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        <button ng-click="openDeleteUserDialog(usr.id)" class="show-btn btn btn-danger" ng-show="usr.id!=loggedUser.id">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </th>
+                </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="10" class="text-center">
+                    <div st-pagination="" st-items-by-page="10" st-displayed-pages="10"></div>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<!-- User Modals dialog -->
+<script type="text/ng-template " id="addUserDialog">
+    <div class="col-md-12 add-user-container">
+        <form id="addUserForm" name="addUserForm">
+            <div class="col-md-12 ">
+                <h2><i class="fa fa-angle-right"></i> Détails de l'utilisateur</h2>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Nom <sup class="text-danger">*</sup></label>
+                        <input type="text" ng-model="newUser.name" class="form-control" required
+                               placeholder="Insérez le nom et prénom de l'utilisateur">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email <sup class="text-danger">*</sup></label>
+                        <input type="email" ng-model="newUser.email" class="form-control" required placeholder="Insérez l'Email de l'utilisateur">
+                    </div>
+                    <div class="form-group">
+                        <label>Mot de passe <sup class="text-danger">*</sup></label>
+                        <input type="password" ng-model="newUser.password" class="form-control" required placeholder="Insérez le mot de passe de l'utilisateur">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Confirmer mot de passe <sup class="text-danger">*</sup></label>
+                        <input type="password" ng-model="newUser.confirmation" class="form-control" required placeholder="Confirmer le mot de passe de l'utilisateur">
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+
+                        <div tabindex="0" ng-file-change="upload($files)" ng-model-rejected="rejFiles" ng-accept="'*.jpg,*.png'" ng-multiple="true" class="upload-button ng-valid ng-dirty" ng-model="files" ng-file-select="" style="overflow: hidden;">
+
+                            <img src="images/no-img-big.png" class="img-thumbnail hidden-xs" />
+                        </div>
+                        <div ng-show="files.length> 0">
+                            <div class="file-container dialog-upload-container" ng-repeat="f in files">
+                                <progressbar ng-show="progressPercentage >= 0" animate="true" value="progressPercentage" type="success">{{progressPercentage}}%</progressbar>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Téléphone</label>
+                        <input type="phone" ng-model="newUser.phone" class="form-control" placeholder="Insérez le numéro de téléphone">
+                    </div>
+                    <div class="form-group">
+                        <label>Rôle <sup class="text-danger">*</sup></label>
+                        <select ui-select2 ng-model="newUser.role" name="role" required>
+                            <option ng-repeat="role in roles" value="{{role.id}}">{{role.title}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div class="ngdialog-buttons mt">
+        <button ng-disabled="addUserForm.$invalid || isCreatingNewUser" type="button" class="btn btn-primary" ng-click="addUser(newUser);closeModal();">
+            <i class="fa" ng-class="{'fa-plus': !isCreatingNewUser, 'fa-circle-o-notch fa-spin': isCreatingNewUser}"></i>
+            Ajouter l'utilisateur
+        </button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+<script type="text/ng-template " id="updateUserDialog">
+    <div class="col-md-12 add-user-container">
+        <form id="updateUserForm" name="updateUserForm">
+            <div class="col-md-12 ">
+                <h2><i class="fa fa-angle-right"></i> Détails du l'utilisateur</h2>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Nom <sup class="text-danger">*</sup></label>
+                        <input type="text" ng-model="userToUpdate.name" class="form-control" required placeholder="Insérez le nom et prénom de l'utilisateur">
+                    </div>
+                    <div class="form-group">
+                        <label>Messagerie Electronique <sup class="text-danger">*</sup></label>
+                        <input type="email" ng-model="userToUpdate.email" class="form-control" required placeholder="Insérez l'Email de l'utilisateur">
+                    </div>
+                    <div class="form-group">
+                        <label>Mot de passe </label>
+                        <input type="password" ng-model="userToUpdate.password" class="form-control" placeholder="Insérez le mot de passe de l'utilisateur" >
+                    </div>
+
+                    <div class="form-group">
+                        <label>Confirmer mot de passe </label>
+                        <input type="password" ng-model="userToUpdate.confirmation" class="form-control" placeholder="Confirmer le mot de passe de l'utilisateur">
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+
+                        <div tabindex="0" ng-file-change="upload($files)" ng-model-rejected="rejFiles" ng-accept="'*.jpg,*.png'" ng-multiple="true" class="upload-button ng-valid ng-dirty" ng-model="files" ng-file-select="" style="overflow: hidden;">
+
+                            <img src="images/no-img-big.png" class="img-thumbnail hidden-xs" />
+                        </div>
+                        <div ng-show="files.length> 0">
+                            <div class="file-container dialog-upload-container" ng-repeat="f in files">
+                                <progressbar ng-show="progressPercentage >= 0" animate="true" value="progressPercentage" type="success">{{progressPercentage}}%</progressbar>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Tél</label>
+                        <input type="phone" ng-model="userToUpdate.phone" class="form-control" placeholder="Insérez le numéro de téléphone">
+                    </div>
+                    <div class="form-group">
+                        <label>Rôle <sup class="text-danger">*</sup></label>
+                        <select ui-select2 ng-model="userToUpdate.role.id" name="role" required>
+                            <option ng-repeat="role in roles" value="{{role.id}}">{{role.title}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div class="ngdialog-buttons mt">
+        <button ng-disabled="updateUserForm.$invalid || isUpdatingUser" type="button" class="btn btn-primary" ng-click="closeModal(); updateUser()">
+            <i class="fa" ng-class="{'fa-edit': !isUpdatingUser, 'fa-circle-o-notch fa-spin': isUpdatingUser}"></i>
+            Modifier l'utilisateur
+        </button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>
+<script type="text/ng-template" id="deleteUserDialog">
+    <div class="ngdialog-message">
+        <h2>Voulez-vous vraiment supprimer cet utilisateur ?</h2>
+    </div>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="closeModal();deleteUser($parent.userId)" class="btn btn-primary">Confirmer</button>
+        <button ng-click="closeModal()" class="btn btn-default">Annuler</button>
+    </div>
+</script>

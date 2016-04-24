@@ -1,0 +1,293 @@
+<div class="box border no-top col-md-12" ng-show="!$parent.subProjectSelected">
+    <div class="box-body col-md-12">
+        <h1>Missions</h1>
+        <button ng-click="openAddMissionDialog()" class="btn btn btn-primary">
+            <i class="fa fa-plus"></i> Ajouter
+        </button>
+        <table st-table="displayedCollection" st-safe-src="subprojects" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Missions</th>
+                <th>Budget</th>
+                <th>Modalités de paiement</th>
+                <th>Contrat</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="subproject in displayedCollection ">
+                <td>
+                    <span class="label label-default mission-label" ng-repeat="mission in subproject.missions">{{mission.name}}</span>
+                </td>
+                <td>{{ subproject.budget | currency:"" }} DH</td>
+                <td>
+                    <a popover="{{pm.percentage}}% {{pm.label}}" popover-trigger="mouseenter"
+                       class="label label-primary mission-label" ng-repeat="pm in subproject.paymentMethods"><i
+                            class="fa fa-ticket"></i> {{pm.percentage}}%</a>
+                </td>
+                <th class="btn-zone-sm">
+                    <a ng-show="subproject.signedContract" href="{{subproject.signedContract.webPath}}" target="_blank"
+                       class="show-btn btn btn-default" tooltip="Voir le contrat signé">
+                        <i class="fa fa-file-text"></i>
+                    </a>
+                    <button class="show-btn btn btn-default" ng-click="generateContract(subproject, $index)"
+                            ng-disabled="isGenerating" tooltip="Générer le contrat">
+                        <i class="fa"
+                           ng-class="{'fa-file-pdf-o': !isGenerating || !isContratGenerating($index), 'fa-circle-o-notch fa-spin': isGenerating && isContratGenerating($index)}"></i>
+                    </button>
+                    <button ng-click="openUploadContractDialog(subproject)" class="show-btn btn btn-default" tooltip="Uploader le contrat signé">
+                        <i class="fa fa-upload"></i>
+                    </button>
+
+                </th>
+                <th class="btn-zone-bg">
+                    <a href="#/project/{{project.id}}/missions/voir/{{subproject.id}}" class="show-btn btn btn-default"
+                       tooltip="Détails">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                    <a href="#/project/{{project.id}}/missions/facturation/{{subproject.id}}"
+                       class="show-btn btn btn-default" tooltip="Facturation">
+                        <i class="fa fa-money"></i>
+                    </a>
+                    <button ng-click="openUpdateSubProjectDialog(subproject)" ng-hide="subproject.signedContract"
+                            class="show-btn btn btn-primary" tooltip="Modifier">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                    <button ng-hide="$index == 0" ng-click="openDeleteSubProjectDialog(subproject)"
+                            class="show-btn btn btn-danger" tooltip="Supprimer">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </th>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="10" class="text-center">
+                    <div st-pagination="" st-items-by-page="10" st-displayed-pages="10"></div>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<!--START MISSIONS MODALS -->
+
+<script type="text/ng-template " id="addMissionModal ">
+    <form class="col-md-12" name="addMission">
+        <h2>Ajouter des missions:</h2>
+
+        <div class="col-md-12">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Missions</label>
+                    <ui-select notempty multiple theme="select2" ng-model="newsubproject.missions"
+                               ng-change="checkTotal(newsubproject.paymentmethods)" required>
+                        <ui-select-match placeholder="Sélectionner des missions">{{$item.name}}</ui-select-match>
+                        <ui-select-choices repeat="mission in remainingMissions()">
+                            {{mission.name}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class=" col-md-6 ">
+                <div class="form-group ">
+                    <label>Budget</label>
+
+                    <div class="form-group ">
+                        <div class="input-group ">
+                            <input type="number " class="form-control" min=0 ng-model="newsubproject.budget "
+                                   placeholder="Insérer le budget "
+                                   ng-change="checkTotal(newsubproject.paymentmethods) " required>
+
+                            <div class="input-group-addon ">DH</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 ">
+                <label>Modalité de Payment</label>
+
+                <div class="col-md-12 ">
+                    <div class="col-md-12 ">
+                        <progress class="progress-striped active ">
+                            <bar ng-repeat="pm in newsubproject.paymentmethods track by $index " value="pm.percentage "
+                                 type="{{nextBarType($index)}} "><span ng-hide="pm.percentage < 1 ">{{pm.percentage}}% {{pm.label}}</span>
+                            </bar>
+                        </progress>
+                    </div>
+                </div>
+                <div class="pm-scroller ">
+                    <div ng-repeat="pm in newsubproject.paymentmethods " class="payment-method col-md-12 ">
+                        <div class="col-md-5 ">
+                            <div class="input-group ">
+                                <input type="number " class="form-control " ng-model="pm.percentage "
+                                       placeholder="Insérer le pourcentage "
+                                       ng-change="checkTotal(newsubproject.paymentmethods) " min=0 max=100 required>
+
+                                <div class="input-group-addon "> % = {{budgetPercentage($index)| currency:"DH "}}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-5 ">
+                            <div class="input-group ">
+                                <input type="text " class="form-control " ng-model="pm.label "
+                                       placeholder="Inserer le label " required>
+                            </div>
+                        </div>
+                        <div class="col-md-2 ">
+                            <div class="btn-toolbar ">
+                                <button ng-click="removePm($index) "
+                                        ng-show="newsubproject.paymentmethods.length> 1 && $index != 0" type="button"
+                                        class="btn-show btn btn-danger"><i class="fa fa-times"></i>
+                                </button>
+                                <button ng-click="addPm()" ng-show="$index == newsubproject.paymentmethods.length - 1"
+                                        type="button" class="btn-show btn btn-default"><i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="addMissions()" class="btn btn-primary"
+                ng-disabled="addMission.$invalid || isCreatingSubproject || $parent.max == null || $parent.max == -1 ">
+            <i class="fa"
+               ng-class="{'fa-plus': !isCreatingSubproject, 'fa-circle-o-notch fa-spin': isCreatingSubproject}"></i>
+            Ajouter les missions
+        </button>
+        <button ng-click="closeModal()" class="btn btn-default ">Annuler</button>
+    </div>
+</script>
+
+<script type="text/ng-template " id="updateMissionModal ">
+    <form class="col-md-12" name="updateMission">
+        <h2>Modifier des missions:</h2>
+
+        <div class="col-md-12">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Missions</label>
+                    <ui-select notempty multiple theme="select2" ng-model="subProjectToUpdate.missions"
+                               ng-change="checkTotal(subProjectToUpdate.paymentMethods)"
+                               on-select="addToMission($item, $model)" on-remove="removeFromMission($item, $model)"
+                               on-select="genRemainingMissions()" required>
+                        <ui-select-match placeholder="Sélectionner des missions">{{$item.name}}</ui-select-match>
+                        <ui-select-choices repeat="mission in allMissionsToEdit">
+                            {{mission.name}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Budget</label>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="number" class="form-control" min=0 ng-model="subProjectToUpdate.budget"
+                                   placeholder="Insérer le budget"
+                                   ng-change="checkTotal(subProjectToUpdate.paymentMethods)" required>
+
+                            <div class="input-group-addon">DH</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <label>Modalité de Payment</label>
+
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                        <progress class="progress-striped active">
+                            <bar ng-repeat="pm in subProjectToUpdate.paymentMethods track by $index"
+                                 value="pm.percentage" type="{{nextBarType($index)}}"><span ng-hide="pm.percentage < 1">{{pm.percentage}}% {{pm.label}}</span>
+                            </bar>
+                        </progress>
+                    </div>
+                </div>
+                <div class="pm-scroller">
+                    <div ng-repeat="pm in subProjectToUpdate.paymentMethods" class="payment-method col-md-12">
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <input type="number" class="form-control" ng-model="pm.percentage"
+                                       placeholder="Insérer le pourcentage"
+                                       ng-change="checkTotal(subProjectToUpdate.paymentMethods)" min=0 max=100 required>
+
+                                <div class="input-group-addon"> % = {{budgetPercentageWhenUp($index)| currency:"DH "}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <input type="text" class="form-control" ng-model="pm.label"
+                                       placeholder="Insérer le label" required>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="btn-toolbar">
+                                <button ng-click="removePmWhenUp($index)"
+                                        ng-show="subProjectToUpdate.paymentMethods.length > 1 && $index != 0"
+                                        type="button" class="btn-show btn btn-danger"><i class="fa fa-times"></i>
+                                </button>
+                                <button ng-click="addPmWhenUp()"
+                                        ng-show="$index == subProjectToUpdate.paymentMethods.length - 1" type="button"
+                                        class="btn-show btn btn-default"><i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="ngdialog-buttons mt">
+        <button ng-click="updateSubProject()" class="btn btn-primary"
+                ng-disabled="updateMission.$invalid || isUpdatingSubproject || $parent.max == null || $parent.max == -1 ">
+            <i class="fa "
+               ng-class="{ 'fa-edit': !isUpdatingSubproject, 'fa-circle-o-notch fa-spin': isUpdatingSubproject} "></i>
+            Modifier les missions
+        </button>
+        <button ng-click="closeModal() " class="btn btn-default ">Annuler</button>
+    </div>
+</script>
+
+<script type="text/ng-template " id="deleteSubProjectModal ">
+    <div class="ngdialog-message">
+        <h2>Suppression d'une mission</h2>
+
+        <p>Voulez-vous vraiment supprimer cet élément ?</p>
+    </div>
+    <div class="ngdialog-buttons mt ">
+        <button ng-click="deleteSubProject()" ng-disabled="isDeletingSubproject" class="btn btn-primary"><i
+                ng-if="isDeletingSubproject" class="fa fa-circle-o-notch fa-spin"></i> Confirmer
+        </button>
+        <button ng-click="closeModal() " class="btn btn-default ">Annuler</button>
+    </div>
+</script>
+<script type="text/ng-template " id="uploadContractModal ">
+    <div class="ngdialog-message ">
+        <h2>Uploader un contrat signé <sup class="small text-danger ">* en format pdf</sup></h2>
+
+        <div>
+            <div class="drop " ng-file-drop=" " ng-file-select=" " ng-model="$parent.files "
+                 ng-model-rejected="rejFiles "
+                 drag-over-class="{accept: 'dragover', reject: 'dragover-err', delay:100} " class="drop-box "
+                 ng-multiple="true " allow-dir="false " ng-accept=" '*.pdf' ">
+                Cliquer ou glisser-déposer le fichier
+            </div>
+            <div ng-show="files.length> 0">
+                <div class="file-container dialog-upload-container" ng-repeat="f in files">
+                    <div class="thumbnail file col-md-2">
+                        <i class="fa fa-file-pdf-o fa-3x"></i>
+                    </div>
+                    <span class="title">{{f.name}} - {{f.size|FileSize}}</span>
+                    <progressbar ng-show="progressPercentage >= 0" animate="true" value="progressPercentage"
+                                 type="success">{{progressPercentage}}%
+                    </progressbar>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

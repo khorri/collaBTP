@@ -1,0 +1,220 @@
+<div class="box border no-top col-md-12">
+	<div class="box-body col-md-12">
+		<h1>Fiche descriptive
+			<small ng-if="newDescFile.version > 1">Modifiée le {{newDescFile.createdAt | date:'dd/MM/yyyy à HH:mm'}}</small>
+			<small ng-if="newDescFile.version == 1">Créée le {{newDescFile.createdAt | date:'dd/MM/yyyy à HH:mm'}}</small>
+        </h1>
+		<div sticky offset="100" class="actions-btn">
+			<button ng-click="createDescriptionFile()" class="btn btn btn-primary " ng-disabled="addDescriptionFile.$invalid">
+				<i class="fa fa-save"></i> Enregistrer
+			</button>
+			<a href="{{newDescFile.file.webPath}}" class="btn btn btn-default" ng-disabled="addDescriptionFile.$invalid" ng-show="newDescFile.version > 0">
+				<i class="fa fa-download"></i> Télécharger
+			</a>
+		</div>
+		<form name="addDescriptionFile">
+			<div class="col-md-12">
+
+				<div class="col-md-6">
+					<div class="form-group">
+						<label class="pre-label">Référence du projet :</label>
+						<label>{{project.ref}}</label>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Nom du projet :</label>
+						<label>{{project.name}}</label>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Chef de projet :</label>
+						<label>{{project.projectLeader.name}}</label>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Intervenants au projet :</label>
+						<ui-select notempty multiple theme="select2" ng-model="newDescFile.participants" required>
+							<ui-select-match placeholder="">{{$item.company}}</ui-select-match>
+							<ui-select-choices repeat="participant in allParticipants">
+								{{participant.company}} ({{participant.contactPerson}})
+							</ui-select-choices>
+						</ui-select>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Date :</label>
+						<input type="date" class="form-control" ng-model="newDescFile.date" required>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Plan N° :</label>
+						<input type="text" class="form-control" ng-model="newDescFile.planNumber" required>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Evaluation du risque</label>
+						<select ui-select2 ng-model="newDescFile.riskEvaluation" name="newDescFile.riskEvaluation">
+							<option value="Normale">Normale</option>
+							<option value="Moyenne">Moyenne</option>
+							<option value="Elevée">Elevée</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Ouvrage examiné</label>
+						<input type="text" class="form-control" ng-model="newDescFile.workExamination" name="newDescFile.workExamination">
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Sondages examinés</label>
+						<input type="text" class="form-control" ng-model="newDescFile.surveyExamination" name="newDescFile.surveyExamination">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="jumbotron" ng-show="descFileVersions > 0">
+						<h4>Anciennes versions</h4>
+						<ul>
+							<li ng-repeat="descFile in allVersions | orderBy:descFile.createdAt"><a ng-click="getDescFile(descFile.id)">{{descFile.name}} / Modifié le {{descFile.createdAt | date:'dd/MM/yyyy à HH:mm'}}</a>
+							</li>
+						</ul>
+						<br>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Observations:</label>
+						<textarea class="form-control" ng-model="newDescFile.observations" name="newDescFile.observations"></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="col-md-6">
+					<h3>Type de bâtiment</h3>
+					<div class="form-group">
+						<label class="pre-label">Type d'habitation</label>
+						<select ui-select2 ng-model="newDescFile.habitationType" name="newDescFile.habitationType">
+							<option value="Maison">Maison</option>
+							<option value="Administration">Administration</option>
+							<option value="Appartement">Appartement</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Charges permanentes</label>
+						<div class="input-group">
+							<input type="number" class="form-control" ng-model="newDescFile.permanentLoad" name="newDescFile.permanentLoad">
+							<span class="input-group-addon">Kg/m<sup>2</sup></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Charges d'exploitation</label>
+						<div class="input-group">
+							<select ui-select2 ng-model="newDescFile.exploitationLoad">
+								<option value="175">175 </option>
+								<option value="250">250</option>
+								<option value="500">500</option>
+							</select>
+							<span class="input-group-addon">Kg/m<sup>2</sup></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Nombre de niveaux</label>
+						<input type="number" class="form-control" ng-model="newDescFile.levelsNumber" name="newDescFile.levelsNumber">
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Hauteur maximale inter-étages</label>
+						<div class="input-group">
+							<input type="number" class="form-control" ng-model="newDescFile.interstageMaxHeight" name="newDescFile.interstageMaxHeight">
+							<span class="input-group-addon">m</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Hauteur du bâtiment</label>
+						<div class="input-group">
+							<input type="number" class="form-control" ng-model="newDescFile.buildingHeight" name="newDescFile.buildingHeight">
+							<span class="input-group-addon">m</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<h3>Sol</h3>
+					<div class="form-group">
+						<div class="form-group switch-container">
+							<label class="pre-label switch-label">Investigation géotechnique</label>
+							<switch name="newDescFile.geotechnicalInvestigation" ng-model="newDescFile.geotechnicalInvestigation" class="green form-control"></switch>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Stresse du sol</label>
+						<input type="number" class="form-control" ng-model="newDescFile.soilStress">
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Mode des fondations</label>
+						<input type="text" class="form-control" ng-model="newDescFile.fundationMode">
+					</div>
+					<div class="form-group">
+						<label class="pre-label">Couche d'assise</label>
+						<input type="text" class="form-control" ng-model="newDescFile.couche">
+					</div>
+					<div class="form-group switch-container">
+						<label class="pre-label switch-label">Présence de la nappe</label>
+						<switch class="green form-control" ng-model="newDescFile.nappePresence"></switch>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-6 ">
+				<h3>Sismique</h3>
+				<div class="col-md-12">
+					<div class="form-group ">
+						<label class="pre-label">Site</label>
+						<input type="text" class="form-control " ng-model="newDescFile.site " name="newDescFile.site ">
+					</div>
+					<div class="form-group ">
+						<label class="pre-label">Coefficient du comportement</label>
+						<input type="number" class="form-control " ng-model="newDescFile.behaviorCoeff " name="newDescFile.behaviorCoeff ">
+					</div>
+					<div class="form-group ">
+						<label class="pre-label">Coefficient dynamique</label>
+						<input type="number" class="form-control " ng-model="newDescFile.dynamicCoeff " name="newDescFile.dynamicCoeff ">
+					</div>
+					<div class="form-group ">
+						<label class="pre-label">Type de contreventement</label>
+						<input type="text" class="form-control " ng-model="newDescFile.bracingType " name="newDescFile.bracingType ">
+					</div>
+					<div class="form-group ">
+						<label class="pre-label">Classe du batiment</label>
+						<input type="text" class="form-control " ng-model="newDescFile.buildingClass " name="newDescFile.buildingClass ">
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-6">
+				<h3>Structure</h3>
+				<div class="col-md-12">
+					<div class="form-group">
+						<label class="pre-label col-md-12">Portée maximale</label>
+						<div class="col-md-4">
+							<input type="number" class="form-control" placeholder="Poutre" ng-model="newDescFile.poutreMaxRange" name="newDescFile.poutreMaxRange">
+						</div>
+						<div class="col-md-4">
+							<input type="number" class="form-control" placeholder="Console" ng-model="newDescFile.consoleMaxRange" name="newDescFile.consoleMaxRange">
+						</div>
+						<div class="col-md-4">
+							<input type="number" class="form-control" placeholder="Porte à faux" ng-model="newDescFile.pafMaxRange" name="newDescFile.pafMaxRange">
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12 margin-top-20">
+					<div class="form-group">
+						<label class="pre-label col-md-12">Type de dalle</label>
+						<div class="col-md-12">
+							<input type="text" class="form-control" placeholder="Type de dalle" ng-model="newDescFile.panelType " name="newDescFile.panelType ">
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12 margin-top-20">
+					<div class="form-group switch-container col-md-8">
+						<label class="pre-label switch-label">Présence des charges concentrées</label>
+						<switch name="newDescFile.concentratedLoads" ng-model="newDescFile.concentratedLoads" class="green form-control"></switch>
+					</div>
+					<div ng-show="newDescFile.concentratedLoads" class="col-md-12">
+						<div class="input-group">
+							<input type="number" class="form-control" placeholder="Pourcentage" ng-model="newDescFile.percentage " name="newDescFile.percentage ">
+							<div class="input-group-addon">%</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
